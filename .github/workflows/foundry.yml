@@ -3,18 +3,18 @@ name: Run Foundry Test
 on: [push]
 
 jobs:
-    test_foundry:
+  test_foundry:
     runs-on: ubuntu-latest
     steps:
-        - uses: actions/checkout@v2
-        - uses: actions/setup-node@v3
+      - uses: actions/checkout@v2
+      - uses: actions/setup-node@v3
         with:
-            node-version: 16
-        - name: Install Foundry
+          node-version: 16
+      - name: Install Foundry
         uses: onbjerg/foundry-toolchain@v1
         with:
-            version: nightly
-        - name: NPM Clean Install
-        run: npm ci
-        - name: Run Forge Test
+          version: nightly
+      - name: NPM Install
+        run: npm install
+      - name: Run Forge Test
         run: forge test
