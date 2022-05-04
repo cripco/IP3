@@ -51,37 +51,29 @@ const setupProviderAndWallet = async () => {
     return [provider, owner, user1, user2, user3];
 };
 
-const setupContractTesting = async (ownerAddress) => {
+const setupContractTesting = async (owner) => {
     if (network.name !== 'hardhat') {
         initialBlockGATE = await ethers.provider.getBlockNumber();
     }
     const FactoryIP3Token = await ethers.getContractFactory('IP3Token');
-    const FactoryIP3VestingBoard = await ethers.getContractFactory('IP3VestingBoard');
     let IP3Token;
-    let IP3VestingBoard;
     if (network.name === 'hardhat') {
         IP3Token = await FactoryIP3Token.deploy();
-        IP3VestingBoard = await FactoryIP3VestingBoard.deploy();
 
-        await IP3VestingBoard.initialize(IP3Token.address, NAME, SYMBOL, TOTALSUPPLY);
+        await IP3Token.initialize(owner.address, NAME, SYMBOL, TOTALSUPPLY);
     } else {
         const IP3TokenAddress = await addressBook.retrieveContract('IP3Token', network.name);
-        const IP3VestingBoardAddress = await addressBook.retrieveContract('IP3VestingBoard', network.name);
 
-        IP3Token = await new ethers.Contract(IP3TokenAddress, FactoryIP3Token.interface, ownerAddress);
-        IP3VestingBoard = await new ethers.Contract(
-            IP3VestingBoardAddress,
-            FactoryIP3VestingBoard.interface,
-            ownerAddress
-        );
+        IP3Token = await new ethers.Contract(IP3TokenAddress, FactoryIP3Token.interface, owner.address);
         if (!skipInitializeContracts) {
-            if ((await IP3VestingBoard.ip3Token()) !== IP3Token.address) {
-                await IP3VestingBoard.initialize(IP3Token.address, NAME, SYMBOL, TOTALSUPPLY);
+            try {
+                await IP3Token.name();
+            } catch (e) {
+                await IP3Token.initialize(owner.address, NAME, SYMBOL, TOTALSUPPLY);
             }
         }
     }
-
-    return [IP3Token, IP3VestingBoard];
+    return [IP3Token];
 };
 
 const txn = async (input, to, sender, ethers, provider) => {

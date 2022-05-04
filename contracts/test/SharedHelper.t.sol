@@ -7,7 +7,6 @@ import "./utils/test.sol";
 import {CheatCodes} from "./utils/cheatcodes.sol";
 
 import {IP3Token} from "../IP3Token.sol";
-import {IP3VestingBoard} from "../IP3VestingBoard.sol";
 
 contract SharedHelper is DSTest {
     // using console for console;
@@ -21,24 +20,21 @@ contract SharedHelper is DSTest {
 
     uint8 _LOG_LEVEL;
     address _ip3Token;
-    address _ip3VestingBoard;
     address _testContractAddress;
 
     // Events
     function initialize_helper(
         uint8 LOG_LEVEL_,
         address ip3Token_,
-        address ip3VestingBoard_,
         address testContractAddress_
     ) internal {
         _LOG_LEVEL = LOG_LEVEL_;
         _ip3Token = ip3Token_;
-        _ip3VestingBoard = ip3VestingBoard_;
         _testContractAddress = testContractAddress_;
 
         // Initialize contracts
 
-        IP3VestingBoard(ip3VestingBoard_)
+        IP3Token(ip3Token_)
             .initialize(
                 ip3Token_, 
                 NAME, 

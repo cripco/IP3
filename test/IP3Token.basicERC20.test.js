@@ -11,7 +11,6 @@ let user1;
 let user2;
 let user3;
 let IP3Token;
-let IP3VestingBoard;
 let provider;
 const zeroAddress = '0x0000000000000000000000000000000000000000';
 
@@ -21,7 +20,7 @@ describe('IP3Token - Basic ERC20 functions', function () {
     });
 
     beforeEach(async () => {
-        [IP3Token, IP3VestingBoard] = await TestHelper.setupContractTesting(owner);
+        [IP3Token] = await TestHelper.setupContractTesting(owner);
     });
 
     describe('IP3Token - ERC20 Token Info', async function () {

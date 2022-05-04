@@ -13,15 +13,15 @@ contract Ethless is Reservable {
 
     enum EthlessTxnType {
         NONE,       // 0
-        TRANSFER,   // 1
-        BURN,       // 2
-        RESERVE     // 3
+        BURN,       // 1
+        MINT,       // 2
+        TRANSFER,   // 3
+        RESERVE     // 4
     }
     
     mapping (address => mapping (uint256 => EthlessTxnType)) private _nonceUsed;
 
     function __Ethless_init_unchained() internal onlyInitializing {
-        __Reservable_init_unchained();
     }
     
     function _useNonce(address signer_, uint256 nonce_, EthlessTxnType txnType_) internal {
@@ -29,10 +29,11 @@ contract Ethless is Reservable {
         _nonceUsed[signer_][nonce_] = txnType_;
     }
 
-    function _validateEthlessHash(address signer_, bytes32 structHash_, bytes memory signature_) internal pure {
+    function _validateEthlessHash(address signer_, bytes32 structHash_, bytes memory signature_, uint256 deadline_) internal view {
         bytes32 messageHash = structHash_.toEthSignedMessageHash();
         address signer = messageHash.recover(signature_);
         require(signer == signer_, "Ethless: invalid signature");
+        require(block.number <= deadline_, "Ethless: expired deadline");
     }
 
     function transfer(
@@ -40,8 +41,8 @@ contract Ethless is Reservable {
         address to_,
         uint256 amount_,
         uint256 fee_,
-        uint256 deadline_,
         uint256 nonce_,
+        uint256 deadline_,
         bytes memory signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
@@ -60,10 +61,9 @@ contract Ethless is Reservable {
                 address(this),
                 signer_, 
                 to_, 
-                amount_, 
-                deadline_,
+                amount_,
                 nonce_));
-        _validateEthlessHash(signer_, structHash, signature_);
+        _validateEthlessHash(signer_, structHash, signature_, deadline_);
 
         if(fee_ > 0)
             _transfer(signer_, _msgSender(), fee_);
@@ -75,8 +75,8 @@ contract Ethless is Reservable {
         address signer_,
         uint256 amount_,
         uint256 fee_,
-        uint256 deadline_,
         uint256 nonce_,
+        uint256 deadline_,
         bytes memory signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
@@ -92,10 +92,9 @@ contract Ethless is Reservable {
                 block.chainid,
                 address(this),
                 signer_, 
-                amount_, 
-                deadline_,
+                amount_,
                 nonce_));
-        _validateEthlessHash(signer_, structHash, signature_);
+        _validateEthlessHash(signer_, structHash, signature_, deadline_);
 
         if(fee_ > 0)
             _transfer(signer_, _msgSender(), fee_);
@@ -109,19 +108,11 @@ contract Ethless is Reservable {
         address executor_,
         uint256 amount_,
         uint256 fee_,
-        uint256 executionFee_,
-        uint256 deadline_,
         uint256 nonce_,
+        uint256 deadline_,
         bytes memory signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
-
-        uint256 total = amount_;
-        unchecked {
-            total += fee_;
-        }
-        // Verify balance - reserved balance
-        _beforeTokenTransfer(signer_, to_, total);
 
         bytes32 structHash = keccak256(
             abi.encodePacked(
@@ -133,18 +124,15 @@ contract Ethless is Reservable {
                 executor_, 
                 amount_, 
                 fee_,
-                executionFee_,
-                deadline_,
-                nonce_));
-        _validateEthlessHash(signer_, structHash, signature_);
+                nonce_,
+                deadline_));
+        _validateEthlessHash(signer_, structHash, signature_, deadline_);
 
-        if(fee_ > 0)
-            _transfer(signer_, _msgSender(), fee_);
-        _reserve(signer_, to_, executor_, amount_, executionFee_, deadline_);
+        _reserve(signer_, to_, executor_, amount_, fee_, deadline_);
         return true;
     }
     
-    function balanceOf(address account) public override(Reservable) view virtual returns (uint256 amount) {
+    function balanceOf(address account) public override view virtual returns (uint256 amount) {
         return super.balanceOf(account);
     }
     

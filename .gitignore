@@ -11,5 +11,6 @@ coverage
 coverage.json
 cache
 contractsFlatten
+test-wip
 
 .env.development
