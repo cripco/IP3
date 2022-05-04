@@ -18,6 +18,7 @@ contract IP3VestingBoard is AccessControlUpgradeable {
 
     uint16 public vestingWalletsId;
     mapping (uint16 => VestingWallet) public vestingWallets;
+    mapping (address => uint16) public vestingWalletsByBeneficiary;
 
     function initialize(address IP3Token_, string memory name_, string memory symbol_, uint256 totalSupply_) external initializer {
         __AccessControl_init_unchained();
@@ -41,6 +42,7 @@ contract IP3VestingBoard is AccessControlUpgradeable {
         VestingWallet newVestingWallet;
         newVestingWallet = new VestingWallet();
         vestingWallets[vestingWalletsId] = newVestingWallet;
+        vestingWalletsByBeneficiary[beneficiaryAddress_] = vestingWalletsId;
 
         newVestingWallet.initialize(
             beneficiaryAddress_, 
@@ -88,6 +90,23 @@ contract IP3VestingBoard is AccessControlUpgradeable {
     function getVestingWalletAddress(uint16 vestingWalletsId_) external view returns (address) {
         require(vestingWalletsId_ <= vestingWalletsId, "IP3VestingBoard: Vesting wallet id is out of range");
         return address(vestingWallets[vestingWalletsId_]);
+    }
+
+    function _getVestingWalletByBeneficiary(address beneficiaryAddress_) internal view returns (uint256, uint256, uint256) {
+        uint16 getVestingWalletsId = vestingWalletsByBeneficiary[beneficiaryAddress_];
+        return (
+            start(getVestingWalletsId),
+            duration(getVestingWalletsId),
+            released(getVestingWalletsId)
+        );
+    }
+
+    function getVestingWalletByBeneficiary(address beneficiaryAddress_) external view returns (uint256, uint256, uint256) {
+        return _getVestingWalletByBeneficiary(beneficiaryAddress_);
+    }
+
+    function getMyVestingWalletByBeneficiary() external view returns (uint256, uint256, uint256) {
+        return _getVestingWalletByBeneficiary(_msgSender());
     }
 
     function beneficiary(uint16 vestingWalletsId_) public view virtual returns (address) {
