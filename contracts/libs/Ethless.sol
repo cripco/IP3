@@ -5,34 +5,41 @@ pragma solidity ^0.8.13;
  * @title Ethless
  */
 
-import "./Reservable.sol";
-import "@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol";
+import './Reservable.sol';
+import '@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol';
 
 contract Ethless is Reservable {
     using ECDSAUpgradeable for bytes32;
 
     enum EthlessTxnType {
-        NONE,       // 0
-        BURN,       // 1
-        MINT,       // 2
-        TRANSFER,   // 3
-        RESERVE     // 4
+        NONE, // 0
+        BURN, // 1
+        MINT, // 2
+        TRANSFER, // 3
+        RESERVE // 4
     }
-    
-    mapping (address => mapping (uint256 => EthlessTxnType)) private _nonceUsed;
 
-    function __Ethless_init_unchained() internal onlyInitializing {
-    }
-    
-    function _useNonce(address signer_, uint256 nonce_, EthlessTxnType txnType_) internal {
-        require(_nonceUsed[signer_][nonce_] == EthlessTxnType.NONE, "Ethless: nonce already used");
+    mapping(address => mapping(uint256 => EthlessTxnType)) private _nonceUsed;
+
+    function __Ethless_init_unchained() internal onlyInitializing {}
+
+    function _useNonce(
+        address signer_,
+        uint256 nonce_,
+        EthlessTxnType txnType_
+    ) internal {
+        require(_nonceUsed[signer_][nonce_] == EthlessTxnType.NONE, 'Ethless: nonce already used');
         _nonceUsed[signer_][nonce_] = txnType_;
     }
 
-    function _validateEthlessHash(address signer_, bytes32 structHash_, bytes memory signature_) internal pure {
+    function _validateEthlessHash(
+        address signer_,
+        bytes32 structHash_,
+        bytes memory signature_
+    ) internal pure {
         bytes32 messageHash = structHash_.toEthSignedMessageHash();
         address signer = messageHash.recover(signature_);
-        require(signer == signer_, "Ethless: invalid signature");
+        require(signer == signer_, 'Ethless: invalid signature');
     }
 
     function transfer(
@@ -46,20 +53,11 @@ contract Ethless is Reservable {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
         bytes32 structHash = keccak256(
-            abi.encodePacked(
-                EthlessTxnType.TRANSFER,
-                block.chainid,
-                address(this),
-                signer_, 
-                to_, 
-                amount_,
-                fee_,
-                nonce_
-            ));
+            abi.encodePacked(EthlessTxnType.TRANSFER, block.chainid, address(this), signer_, to_, amount_, fee_, nonce_)
+        );
         _validateEthlessHash(signer_, structHash, signature_);
 
-        if(fee_ > 0)
-            _transfer(signer_, _msgSender(), fee_);
+        if (fee_ > 0) _transfer(signer_, _msgSender(), fee_);
         _transfer(signer_, to_, amount_);
         return true;
     }
@@ -74,18 +72,11 @@ contract Ethless is Reservable {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
         bytes32 structHash = keccak256(
-            abi.encodePacked(
-                EthlessTxnType.BURN,
-                block.chainid,
-                address(this),
-                signer_, 
-                amount_,
-                fee_,
-                nonce_));
+            abi.encodePacked(EthlessTxnType.BURN, block.chainid, address(this), signer_, amount_, fee_, nonce_)
+        );
         _validateEthlessHash(signer_, structHash, signature_);
 
-        if(fee_ > 0)
-            _transfer(signer_, _msgSender(), fee_);
+        if (fee_ > 0) _transfer(signer_, _msgSender(), fee_);
         _burn(signer_, amount_ - fee_);
         return true;
     }
@@ -107,22 +98,24 @@ contract Ethless is Reservable {
                 EthlessTxnType.RESERVE,
                 block.chainid,
                 address(this),
-                signer_, 
+                signer_,
                 to_,
-                executor_, 
-                amount_, 
+                executor_,
+                amount_,
                 fee_,
                 nonce_,
-                deadline_));
+                deadline_
+            )
+        );
         _validateEthlessHash(signer_, structHash, signature_);
 
         _reserve(signer_, to_, executor_, amount_, fee_, nonce_, deadline_);
         return true;
     }
-    
-    function balanceOf(address account) public override view virtual returns (uint256 amount) {
+
+    function balanceOf(address account) public view virtual override returns (uint256 amount) {
         return super.balanceOf(account);
     }
-    
+
     uint256[50] private __gap;
 }

@@ -31,18 +31,15 @@ describe('IP3Token - Reservable functions', function () {
 
             const nonce = Date.now();
             const blockNumber = await provider.getBlockNumber();
-            const expirationBlock = (blockNumber + 2000);
+            const expirationBlock = blockNumber + 2000;
 
-            const input = await IP3Token.connect(owner).populateTransaction['reserve(address,address,address,uint256,uint256,uint256,uint256)'](
-                owner.address, 
-                user1.address, 
-                owner.address, 
-                amountToReserve, 
-                feeToPay, 
-                nonce, 
-                expirationBlock);
+            const input = await IP3Token.connect(owner).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256)'
+            ](owner.address, user1.address, owner.address, amountToReserve, feeToPay, nonce, expirationBlock);
             await TestHelper.checkResult(input, IP3Token.address, owner, ethers, provider, 0);
-            expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay));
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
         });
     });
 
@@ -52,24 +49,24 @@ describe('IP3Token - Reservable functions', function () {
 
             const nonce = Date.now();
             const blockNumber = await provider.getBlockNumber();
-            const expirationBlock = (blockNumber + 2000);
+            const expirationBlock = blockNumber + 2000;
 
-            const input = await IP3Token.connect(owner).populateTransaction['reserve(address,address,address,uint256,uint256,uint256,uint256)'](
-                owner.address, 
-                user1.address, 
-                owner.address, 
-                amountToReserve, 
-                feeToPay, 
-                nonce, 
-                expirationBlock);
+            const input = await IP3Token.connect(owner).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256)'
+            ](owner.address, user1.address, owner.address, amountToReserve, feeToPay, nonce, expirationBlock);
             await TestHelper.checkResult(input, IP3Token.address, owner, ethers, provider, 0);
-            expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay));
-        
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
+
             const inputExecute = await IP3Token.connect(owner).populateTransaction['execute(address,uint256)'](
-                owner.address, 
-                nonce);
+                owner.address,
+                nonce
+            );
             await TestHelper.checkResult(inputExecute, IP3Token.address, owner, ethers, provider, 0);
-            expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance).sub(amountToReserve));
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve)
+            );
             expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(amountToReserve));
         });
     });
@@ -80,22 +77,20 @@ describe('IP3Token - Reservable functions', function () {
 
             const nonce = Date.now();
             const blockNumber = await provider.getBlockNumber();
-            const expirationBlock = (blockNumber + 2);
+            const expirationBlock = blockNumber + 2;
 
-            const input = await IP3Token.connect(owner).populateTransaction['reserve(address,address,address,uint256,uint256,uint256,uint256)'](
-                owner.address, 
-                user1.address, 
-                owner.address, 
-                amountToReserve, 
-                feeToPay, 
-                nonce, 
-                expirationBlock);
+            const input = await IP3Token.connect(owner).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256)'
+            ](owner.address, user1.address, owner.address, amountToReserve, feeToPay, nonce, expirationBlock);
             await TestHelper.checkResult(input, IP3Token.address, owner, ethers, provider, 0);
-            expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay));
-        
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
+
             const inputReclaim = await IP3Token.connect(owner).populateTransaction['reclaim(address,uint256)'](
-                owner.address, 
-                nonce);
+                owner.address,
+                nonce
+            );
             await TestHelper.checkResult(inputReclaim, IP3Token.address, owner, ethers, provider, 0);
             expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance));
             expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(0));

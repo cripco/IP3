@@ -25,7 +25,7 @@ describe('IP3Token - Ethless Permit functions', function () {
 
     describe('IP3Token - Regular Ethless Permit', async function () {
         const amountToPermit = 100;
-        
+
         it('Test Ethless Permit', async () => {
             const blockNumber = await provider.getBlockNumber();
             const block = await provider.getBlock(blockNumber);

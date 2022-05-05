@@ -1,12 +1,12 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "./utils/console.sol";
-import "./utils/stdlib.sol";
-import "./utils/test.sol";
-import {CheatCodes} from "./utils/cheatcodes.sol";
+import './utils/console.sol';
+import './utils/stdlib.sol';
+import './utils/test.sol';
+import { CheatCodes } from './utils/cheatcodes.sol';
 
-import {IP3Token} from "../IP3Token.sol";
+import { IP3Token } from '../IP3Token.sol';
 
 contract SharedHelper is DSTest {
     // using console for console;
@@ -34,18 +34,10 @@ contract SharedHelper is DSTest {
 
         // Initialize contracts
 
-        IP3Token(ip3Token_)
-            .initialize(
-                ip3Token_, 
-                NAME, 
-                SYMBOL, 
-                TOTALSUPPLY
-            );
+        IP3Token(ip3Token_).initialize(ip3Token_, NAME, SYMBOL, TOTALSUPPLY);
     }
-    
-    function _changeLogLevel(
-        uint8 newLogLevel_
-    ) internal {
+
+    function _changeLogLevel(uint8 newLogLevel_) internal {
         _LOG_LEVEL = newLogLevel_;
     }
 }

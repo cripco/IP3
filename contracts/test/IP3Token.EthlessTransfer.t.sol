@@ -1,17 +1,16 @@
 // SPDX-License-Identifier: Unlicense
 pragma solidity ^0.8.0;
 
-import "./utils/console.sol";
-import "./utils/stdlib.sol";
-import "./utils/test.sol";
-import {CheatCodes} from "./utils/cheatcodes.sol";
+import './utils/console.sol';
+import './utils/stdlib.sol';
+import './utils/test.sol';
+import { CheatCodes } from './utils/cheatcodes.sol';
 
-import {IP3Token} from "../IP3Token.sol";
+import { IP3Token } from '../IP3Token.sol';
 
-import "./SharedHelper.t.sol";
+import './SharedHelper.t.sol';
 
 contract IP3TokenTest is DSTest, SharedHelper {
-
     IP3Token iP3Token;
 
     uint8 LOG_LEVEL = 0;
@@ -19,16 +18,13 @@ contract IP3TokenTest is DSTest, SharedHelper {
     address user1 = address(1);
     address user2 = address(2);
     address user3 = address(3);
+
     function setUp() public {
         // Deploy contracts
         iP3Token = new IP3Token();
         // Initialize helper
-        initialize_helper(
-            LOG_LEVEL,
-            address(iP3Token),
-            address(this)
-        );
-        if(LOG_LEVEL > 0) _changeLogLevel(LOG_LEVEL);
+        initialize_helper(LOG_LEVEL, address(iP3Token), address(this));
+        if (LOG_LEVEL > 0) _changeLogLevel(LOG_LEVEL);
     }
 
     // Ethless Transfer
@@ -40,7 +36,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
     //     uint256 nonce = 54645;
 
     //     (uint8 signV, bytes32 signR, bytes32 signS) = vm.sign(
-    //         user1PrivateKey, 
+    //         user1PrivateKey,
     //         keccak256(
     //             abi.encodePacked(
     //                 uint8(3),
@@ -64,11 +60,11 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
     //     vm.prank(user2);
     //     iP3Token.transfer(
-    //         user1, 
-    //         user3, 
-    //         amountToTransfer, 
-    //         feeToPay, 
-    //         nonce, 
+    //         user1,
+    //         user3,
+    //         amountToTransfer,
+    //         feeToPay,
+    //         nonce,
     //         signature
     //     );
 
