@@ -29,11 +29,10 @@ contract Ethless is Reservable {
         _nonceUsed[signer_][nonce_] = txnType_;
     }
 
-    function _validateEthlessHash(address signer_, bytes32 structHash_, bytes memory signature_, uint256 deadline_) internal view {
+    function _validateEthlessHash(address signer_, bytes32 structHash_, bytes memory signature_) internal pure {
         bytes32 messageHash = structHash_.toEthSignedMessageHash();
         address signer = messageHash.recover(signature_);
         require(signer == signer_, "Ethless: invalid signature");
-        require(block.number <= deadline_, "Ethless: expired deadline");
     }
 
     function transfer(
@@ -42,12 +41,9 @@ contract Ethless is Reservable {
         uint256 amount_,
         uint256 fee_,
         uint256 nonce_,
-        uint256 deadline_,
-        bytes memory signature_
+        bytes calldata signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
-
-        uint256 total = amount_ + fee_;
 
         bytes32 structHash = keccak256(
             abi.encodePacked(
@@ -57,8 +53,9 @@ contract Ethless is Reservable {
                 signer_, 
                 to_, 
                 amount_,
+                fee_,
                 nonce_));
-        _validateEthlessHash(signer_, structHash, signature_, deadline_);
+        _validateEthlessHash(signer_, structHash, signature_);
 
         if(fee_ > 0)
             _transfer(signer_, _msgSender(), fee_);
@@ -71,8 +68,7 @@ contract Ethless is Reservable {
         uint256 amount_,
         uint256 fee_,
         uint256 nonce_,
-        uint256 deadline_,
-        bytes memory signature_
+        bytes calldata signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
@@ -84,7 +80,7 @@ contract Ethless is Reservable {
                 signer_, 
                 amount_,
                 nonce_));
-        _validateEthlessHash(signer_, structHash, signature_, deadline_);
+        _validateEthlessHash(signer_, structHash, signature_);
 
         if(fee_ > 0)
             _transfer(signer_, _msgSender(), fee_);
@@ -100,7 +96,7 @@ contract Ethless is Reservable {
         uint256 fee_,
         uint256 nonce_,
         uint256 deadline_,
-        bytes memory signature_
+        bytes calldata signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
@@ -116,7 +112,7 @@ contract Ethless is Reservable {
                 fee_,
                 nonce_,
                 deadline_));
-        _validateEthlessHash(signer_, structHash, signature_, deadline_);
+        _validateEthlessHash(signer_, structHash, signature_);
 
         _reserve(signer_, to_, executor_, amount_, fee_, deadline_);
         return true;
