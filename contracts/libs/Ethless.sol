@@ -47,12 +47,7 @@ contract Ethless is Reservable {
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
-        uint256 total = amount_;
-        unchecked {
-            total += fee_;
-        }
-        // Verify balance - reserved balance
-        _beforeTokenTransfer(signer_, to_, total);
+        uint256 total = amount_ + fee_;
 
         bytes32 structHash = keccak256(
             abi.encodePacked(
@@ -80,11 +75,6 @@ contract Ethless is Reservable {
         bytes memory signature_
     ) external returns (bool succcess) {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
-
-        uint256 total = amount_;
-        unchecked {
-            total += fee_;
-        }
 
         bytes32 structHash = keccak256(
             abi.encodePacked(
