@@ -16,7 +16,7 @@ module.exports = {
 
         var obj = web3.eth.accounts.sign(hash, sourcePrivateKey);
         var signature = obj.signature;
-        return hash;
+        return signature;
     },
     signTransfer: function (
         domain,
