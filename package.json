@@ -13,7 +13,7 @@
   "scripts": {
     "test": "npx hardhat test && forge test",
     "prettier-test": "prettier --write test/",
-    "prettier-contracts": "prettier --write 'contracts/**/*.sol'"
+    "prettier-contracts": "prettier --write contracts/"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",

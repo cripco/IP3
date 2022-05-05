@@ -80,6 +80,7 @@ contract Ethless is Reservable {
                 address(this),
                 signer_, 
                 amount_,
+                fee_,
                 nonce_));
         _validateEthlessHash(signer_, structHash, signature_);
 
