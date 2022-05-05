@@ -1,6 +1,6 @@
 # IP3Token and IP3VestingBoard
 
-This project include the IP3 token and the IP3 Vesting Board, a factory contract to create multiple vesting wallet for the IP3 Token.
+This project include the IP3 token.
 
 Try running some of the following tasks:
 

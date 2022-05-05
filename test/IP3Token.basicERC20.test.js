@@ -109,6 +109,21 @@ describe('IP3Token - Basic ERC20 functions', function () {
         });
     });
 
+    describe('IP3Token - burn', async function () {
+        const amountToBurn = 100;
+        
+        it('Test burn() / verify balanceOf owner is -100', async () => {
+            const originalBalance = await IP3Token.balanceOf(owner.address);
+
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['burn(uint256)'](amountToBurn);
+            await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
+
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToBurn)
+            );
+        });
+    });
+
     describe('IP3Token - EIP-712 support', async function () {
         it('Return DOMAIN_SEPARATOR', async () => {
             let msg;

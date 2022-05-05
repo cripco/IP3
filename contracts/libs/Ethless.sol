@@ -54,7 +54,8 @@ contract Ethless is Reservable {
                 to_, 
                 amount_,
                 fee_,
-                nonce_));
+                nonce_
+            ));
         _validateEthlessHash(signer_, structHash, signature_);
 
         if(fee_ > 0)
@@ -114,7 +115,7 @@ contract Ethless is Reservable {
                 deadline_));
         _validateEthlessHash(signer_, structHash, signature_);
 
-        _reserve(signer_, to_, executor_, amount_, fee_, deadline_);
+        _reserve(signer_, to_, executor_, amount_, fee_, nonce_, deadline_);
         return true;
     }
     

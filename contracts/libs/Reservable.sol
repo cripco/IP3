@@ -27,13 +27,10 @@ contract Reservable is ERC20Upgradeable {
     // Total balance of all active reservations per address
     mapping (address => uint256) private _totalReserved;
 
-    // Reservation count per address
-    mapping (address => uint128) private _reservationCount;
-
     // Mapping of all reservations per address and nonces
     mapping (address => mapping(uint256 => Reservation)) internal _reservation;
 
-    function __Reservable_init_unchained(address owner_) internal onlyInitializing {
+    function __Reservable_init_unchained() internal onlyInitializing {
     }
 
     function _reserve(
@@ -42,14 +39,14 @@ contract Reservable is ERC20Upgradeable {
         address executor_,
         uint256 amount_,
         uint256 executionFee_,
+        uint256 nonce_,
         uint256 deadline_
     ) internal {
-        ++_reservationCount[from_];
         uint256 total = amount_;
         unchecked {
             total += executionFee_;
         }
-        _reservation[from_][_reservationCount[from_]] = Reservation(
+        _reservation[from_][nonce_] = Reservation(
             amount_, 
             executionFee_, 
             to_, 
@@ -65,9 +62,10 @@ contract Reservable is ERC20Upgradeable {
         address executor_,
         uint256 amount_,
         uint256 executionFee_,
+        uint256 nonce_,
         uint256 deadline_
     ) external returns (bool success) {
-        _reserve(from_, to_, executor_, amount_, executionFee_, deadline_);
+        _reserve(from_, to_, executor_, amount_, executionFee_, nonce_, deadline_);
         return true;
     }
 
@@ -77,10 +75,6 @@ contract Reservable is ERC20Upgradeable {
 
     function getReservation(address account_, uint256 nonce_) external view returns (Reservation memory) {
         return _reservation[account_][nonce_];
-    }
-
-    function getReservationCount(address account_) external view returns (uint256 count) {
-        return _reservationCount[account_];
     }
 
     function _execute(address from_, Reservation storage reservation) internal returns (bool success) {
@@ -107,14 +101,14 @@ contract Reservable is ERC20Upgradeable {
         return true;
     }
 
-    function execute(address from_, uint256 reservationId_) public returns (bool success) {
-        Reservation storage reservation = _reservation[from_][reservationId_];
+    function execute(address from_, uint256 nonce_) public returns (bool success) {
+        Reservation storage reservation = _reservation[from_][nonce_];
         _execute(from_, reservation);
         return true;
     }
 
-    function reclaim(address from_, uint256 reservationId_) external returns (bool success) {
-        Reservation storage reservation = _reservation[from_][reservationId_];
+    function reclaim(address from_, uint256 nonce_) external returns (bool success) {
+        Reservation storage reservation = _reservation[from_][nonce_];
         address executor = reservation.executor;
 
         require(reservation.expiryBlockNum != 0, "Reservable: reservation does not exist");

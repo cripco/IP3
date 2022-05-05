@@ -17,7 +17,7 @@ contract IP3Token is AccessControlUpgradeable, ERC20PermitUpgradeable, Ethless {
         __EIP712_init_unchained(name_, "1");
         __ERC20Permit_init_unchained(name_);
         _mint(owner_, totalSupply_);
-        __Reservable_init_unchained(owner_);
+        __Reservable_init_unchained();
         __Ethless_init_unchained();
     }
     

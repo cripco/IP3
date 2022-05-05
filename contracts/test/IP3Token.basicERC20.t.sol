@@ -29,16 +29,16 @@ contract IP3TokenTest is DSTest, SharedHelper {
     }
 
     // Basic ERC20 Call
-    function test_GluwaGateToken_basicERC20_name() public {
+    function test_IP3Token_basicERC20_name() public {
         assertEq(iP3Token.name(), NAME);
     }
-    function test_GluwaGateToken_basicERC20_symbol() public {
+    function test_IP3Token_basicERC20_symbol() public {
         assertEq(iP3Token.symbol(), SYMBOL);
     }
-    function test_GluwaGateToken_basicERC20_decimals() public {
+    function test_IP3Token_basicERC20_decimals() public {
         assertEq(iP3Token.decimals(), 18);
     }
-    function test_GluwaGateToken_basicERC20_chainId() public {
+    function test_IP3Token_basicERC20_chainId() public {
         assertEq(iP3Token.chainId(), 99);
     }
 }
