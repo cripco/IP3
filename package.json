@@ -11,7 +11,9 @@
     "contract"
   ],
   "scripts": {
-    "test": "npx hardhat test && forge test"
+    "test": "npx hardhat test && forge test",
+    "prettier-test": "prettier --write test/",
+    "prettier-contracts": "prettier --write 'contracts/**/*.sol'"
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.0",
@@ -22,10 +24,17 @@
     "ethers": "^5.0.0",
     "hardhat": "^2.9.3",
     "hardhat-awesome-cli": "^0.0.9",
+    "pre-commit": "^1.2.2",
     "prettier": "^2.6.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
     "solidity-coverage": "^0.7.21"
   },
   "dependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.6.0"
-  }
+  },
+  "pre-commit": [
+    "prettier-test",
+    "prettier-contracts",
+    "test"
+  ]
 }
