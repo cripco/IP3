@@ -34,7 +34,6 @@
   },
   "pre-commit": [
     "prettier-test",
-    "prettier-contracts",
-    "test"
+    "prettier-contracts"
   ]
 }

@@ -51,7 +51,7 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 signature
             );
             expect(await IP3Token.balanceOf(owner.address)).to.equal(
-                ethers.BigNumber.from(originalBalance).sub(amountToTransfer)
+                ethers.BigNumber.from(originalBalance).sub(amountToTransfer).add(feeToPay)
             );
             expect((await IP3Token.balanceOf(user2.address)).toString()).to.equal(amountToTransfer.toString());
         });

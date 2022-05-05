@@ -48,31 +48,46 @@ describe('IP3Token - Basic ERC20 functions', function () {
 
         beforeEach(async () => {
             const amountToTransfer = 100;
-            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](user1.address, amountToTransfer);
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](
+                user1.address,
+                amountToTransfer
+            );
             await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
         });
         it('Test approve()', async () => {
-            const inputApprove = await IP3Token.connect(user1).populateTransaction.approve(user2.address, amountToApprove);
+            const inputApprove = await IP3Token.connect(user1).populateTransaction.approve(
+                user2.address,
+                amountToApprove
+            );
             await TestHelper.checkResult(inputApprove, IP3Token.address, user1, ethers, provider, 0);
             expect((await IP3Token.allowance(user1.address, user2.address)).toString()).to.equal(
                 amountToApprove.toString()
             );
         });
         it('Test increaseAllowance()', async () => {
-            const inputIncreaseAllowance = await IP3Token.connect(user1).populateTransaction.increaseAllowance(user2.address, amountToIncrease);
+            const inputIncreaseAllowance = await IP3Token.connect(user1).populateTransaction.increaseAllowance(
+                user2.address,
+                amountToIncrease
+            );
             await TestHelper.checkResult(inputIncreaseAllowance, IP3Token.address, user1, ethers, provider, 0);
             expect((await IP3Token.allowance(user1.address, user2.address)).toString()).to.equal(
                 amountToIncrease.toString()
             );
         });
         it('Test decreaseAllowance()', async () => {
-            const inputApprove = await IP3Token.connect(user1).populateTransaction.approve(user2.address, amountToApprove);
+            const inputApprove = await IP3Token.connect(user1).populateTransaction.approve(
+                user2.address,
+                amountToApprove
+            );
             await TestHelper.checkResult(inputApprove, IP3Token.address, user1, ethers, provider, 0);
             expect((await IP3Token.allowance(user1.address, user2.address)).toString()).to.equal(
                 amountToApprove.toString()
             );
 
-            const inputDecreaseAllowance = await IP3Token.connect(user1).populateTransaction.decreaseAllowance(user2.address, amountToDecrease);
+            const inputDecreaseAllowance = await IP3Token.connect(user1).populateTransaction.decreaseAllowance(
+                user2.address,
+                amountToDecrease
+            );
             await TestHelper.checkResult(inputDecreaseAllowance, IP3Token.address, user1, ethers, provider, 0);
             expect((await IP3Token.allowance(user1.address, user2.address)).toString()).to.equal((50).toString());
         });
@@ -80,11 +95,14 @@ describe('IP3Token - Basic ERC20 functions', function () {
 
     describe('IP3Token - transfer and transferFrom', async function () {
         const amountToTransfer = 100;
-        
+
         it('Test transfer() / verify balanceOf owner is -1000', async () => {
             const originalBalance = await IP3Token.balanceOf(owner.address);
 
-            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](user2.address, amountToTransfer);
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](
+                user2.address,
+                amountToTransfer
+            );
             await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
 
             expect(await IP3Token.balanceOf(owner.address)).to.equal(
@@ -96,22 +114,31 @@ describe('IP3Token - Basic ERC20 functions', function () {
             const originalOwnerBalance = await IP3Token.balanceOf(owner.address);
             const originalUser2Balance = await IP3Token.balanceOf(user2.address);
 
-            const inputApprove = await IP3Token.connect(owner).populateTransaction.approve(user1.address, amountToTransfer);
+            const inputApprove = await IP3Token.connect(owner).populateTransaction.approve(
+                user1.address,
+                amountToTransfer
+            );
             await TestHelper.checkResult(inputApprove, IP3Token.address, owner, ethers, provider, 0);
-            
-            const inputTransferFrom = await IP3Token.connect(user1).populateTransaction.transferFrom(owner.address, user2.address, amountToTransfer);
+
+            const inputTransferFrom = await IP3Token.connect(user1).populateTransaction.transferFrom(
+                owner.address,
+                user2.address,
+                amountToTransfer
+            );
             await TestHelper.checkResult(inputTransferFrom, IP3Token.address, user1, ethers, provider, 0);
 
             expect(await IP3Token.balanceOf(owner.address)).to.equal(
                 ethers.BigNumber.from(originalOwnerBalance).sub(amountToTransfer)
             );
-            expect((await IP3Token.balanceOf(user2.address)).toString()).to.equal(ethers.BigNumber.from(originalUser2Balance).add(amountToTransfer));
+            expect((await IP3Token.balanceOf(user2.address)).toString()).to.equal(
+                ethers.BigNumber.from(originalUser2Balance).add(amountToTransfer)
+            );
         });
     });
 
     describe('IP3Token - burn', async function () {
         const amountToBurn = 100;
-        
+
         it('Test burn() / verify balanceOf owner is -100', async () => {
             const originalBalance = await IP3Token.balanceOf(owner.address);
 

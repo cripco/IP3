@@ -5,14 +5,13 @@ pragma solidity ^0.8.13;
  * @title Reservable
  */
 
-import "@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol";
+import '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 
 contract Reservable is ERC20Upgradeable {
-
     enum ReservationStatus {
-        Active,     // 0
-        Reclaimed,  // 1
-        Completed   // 2
+        Active, // 0
+        Reclaimed, // 1
+        Completed // 2
     }
 
     struct Reservation {
@@ -25,13 +24,12 @@ contract Reservable is ERC20Upgradeable {
     }
 
     // Total balance of all active reservations per address
-    mapping (address => uint256) private _totalReserved;
+    mapping(address => uint256) private _totalReserved;
 
     // Mapping of all reservations per address and nonces
-    mapping (address => mapping(uint256 => Reservation)) internal _reservation;
+    mapping(address => mapping(uint256 => Reservation)) internal _reservation;
 
-    function __Reservable_init_unchained() internal onlyInitializing {
-    }
+    function __Reservable_init_unchained() internal onlyInitializing {}
 
     function _reserve(
         address from_,
@@ -47,12 +45,13 @@ contract Reservable is ERC20Upgradeable {
             total += executionFee_;
         }
         _reservation[from_][nonce_] = Reservation(
-            amount_, 
-            executionFee_, 
-            to_, 
-            executor_, 
-            deadline_, 
-            ReservationStatus.Active);
+            amount_,
+            executionFee_,
+            to_,
+            executor_,
+            deadline_,
+            ReservationStatus.Active
+        );
         _totalReserved[from_] += total;
     }
 
@@ -78,14 +77,17 @@ contract Reservable is ERC20Upgradeable {
     }
 
     function _execute(address from_, Reservation storage reservation) internal returns (bool success) {
-        require(reservation.expiryBlockNum != 0, "Reservable: reservation does not exist");
-        require(reservation.executor == _msgSender() || from_ == _msgSender(),
-            "Reservable: this address is not authorized to execute this reservation");
-        require(reservation.expiryBlockNum > block.number,
-            "Reservable: reservation has expired and cannot be executed");
-        require(reservation.status == ReservationStatus.Active,
-            "Reservable: invalid reservation status to execute");
-        
+        require(reservation.expiryBlockNum != 0, 'Reservable: reservation does not exist');
+        require(
+            reservation.executor == _msgSender() || from_ == _msgSender(),
+            'Reservable: this address is not authorized to execute this reservation'
+        );
+        require(
+            reservation.expiryBlockNum > block.number,
+            'Reservable: reservation has expired and cannot be executed'
+        );
+        require(reservation.status == ReservationStatus.Active, 'Reservable: invalid reservation status to execute');
+
         uint256 fee = reservation.fee;
         uint256 amount = reservation.amount;
         address recipient = reservation.recipient;
@@ -111,14 +113,17 @@ contract Reservable is ERC20Upgradeable {
         Reservation storage reservation = _reservation[from_][nonce_];
         address executor = reservation.executor;
 
-        require(reservation.expiryBlockNum != 0, "Reservable: reservation does not exist");
-        require(reservation.status == ReservationStatus.Active,
-            "Reservable: invalid reservation status to reclaim");
+        require(reservation.expiryBlockNum != 0, 'Reservable: reservation does not exist');
+        require(reservation.status == ReservationStatus.Active, 'Reservable: invalid reservation status to reclaim');
         if (_msgSender() != executor) {
-            require(_msgSender() == from_,
-                "Reservable: only the sender or the executor can reclaim the reservation back to the sender");
-            require(reservation.expiryBlockNum <= block.number,
-                "Reservable: reservation has not expired or you are not the executor and cannot be reclaimed");
+            require(
+                _msgSender() == from_,
+                'Reservable: only the sender or the executor can reclaim the reservation back to the sender'
+            );
+            require(
+                reservation.expiryBlockNum <= block.number,
+                'Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
+            );
         }
 
         reservation.status = ReservationStatus.Reclaimed;
@@ -129,9 +134,9 @@ contract Reservable is ERC20Upgradeable {
         return true;
     }
 
-    function balanceOf(address account) public override view virtual returns (uint256 amount) {
+    function balanceOf(address account) public view virtual override returns (uint256 amount) {
         return super.balanceOf(account) - _totalReserved[account];
     }
-    
+
     uint256[50] private __gap;
 }
