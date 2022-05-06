@@ -9,9 +9,10 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 
 contract Reservable is ERC20Upgradeable {
     enum ReservationStatus {
-        Active, // 0
-        Reclaimed, // 1
-        Completed // 2
+        Draft,      // 0
+        Active,     // 1
+        Reclaimed,  // 2
+        Completed   // 3
     }
 
     struct Reservation {
@@ -40,10 +41,6 @@ contract Reservable is ERC20Upgradeable {
         uint256 nonce_,
         uint256 deadline_
     ) internal {
-        uint256 total = amount_;
-        unchecked {
-            total += executionFee_;
-        }
         _reservation[from_][nonce_] = Reservation(
             amount_,
             executionFee_,
@@ -52,7 +49,7 @@ contract Reservable is ERC20Upgradeable {
             deadline_,
             ReservationStatus.Active
         );
-        _totalReserved[from_] += total;
+        _totalReserved[from_] += amount_ + executionFee_;
     }
 
     function reserve(
