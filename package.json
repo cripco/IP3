@@ -1,0 +1,39 @@
+{
+  "name": "ip3",
+  "version": "1.0.0",
+  "description": "IP3 tokens contracts",
+  "main": "index.js",
+  "license": "MIT",
+  "keywords": [
+    "ethereum",
+    "smart-contract",
+    "token",
+    "contract"
+  ],
+  "scripts": {
+    "test": "npx hardhat test && forge test",
+    "prettier-test": "prettier --write test/",
+    "prettier-contracts": "prettier --write contracts/"
+  },
+  "devDependencies": {
+    "@nomiclabs/hardhat-ethers": "^2.0.0",
+    "@nomiclabs/hardhat-waffle": "^2.0.0",
+    "chai": "^4.2.0",
+    "chance": "^1.1.8",
+    "ethereum-waffle": "^3.0.0",
+    "ethers": "5.0.0",
+    "hardhat": "^2.9.3",
+    "hardhat-awesome-cli": "^0.0.9",
+    "pre-commit": "^1.2.2",
+    "prettier": "^2.6.2",
+    "prettier-plugin-solidity": "^1.0.0-beta.19",
+    "solidity-coverage": "^0.7.21"
+  },
+  "dependencies": {
+    "@openzeppelin/contracts-upgradeable": "^4.6.0"
+  },
+  "pre-commit": [
+    "prettier-test",
+    "prettier-contracts"
+  ]
+}

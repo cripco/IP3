@@ -1,0 +1,16 @@
+node_modules
+.env
+coverage
+coverage.json
+typechain
+
+#Hardhat files
+cache
+artifacts
+coverage
+coverage.json
+cache
+contractsFlatten
+test-wip
+
+.env.development
