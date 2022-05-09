@@ -242,7 +242,7 @@ describe('IP3Token - Ethless Permit functions', function () {
                 'ERC20Permit: invalid signature'
             );
         });
-        
+
         it('Test Ethless Permit & 2x transferFrom, the second one should fail as it will be higher than the remaining allowance', async () => {
             const blockNumber = await provider.getBlockNumber();
             const block = await provider.getBlock(blockNumber);
@@ -326,8 +326,14 @@ describe('IP3Token - Ethless Permit functions', function () {
                 user1.address,
                 amountToTransfer
             );
-            await TestHelper.checkResult(inputTransferFrom2, IP3Token.address, user2, ethers, provider, 'ERC20: insufficient allowance');
-
+            await TestHelper.checkResult(
+                inputTransferFrom2,
+                IP3Token.address,
+                user2,
+                ethers,
+                provider,
+                'ERC20: insufficient allowance'
+            );
         });
     });
 });

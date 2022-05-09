@@ -177,7 +177,14 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user2.address,
                 amountToDecrease
             );
-            await TestHelper.checkResult(inputDecreaseAllowance, IP3Token.address, user1, ethers, provider, 'ERC20: decreased allowance below zero');
+            await TestHelper.checkResult(
+                inputDecreaseAllowance,
+                IP3Token.address,
+                user1,
+                ethers,
+                provider,
+                'ERC20: decreased allowance below zero'
+            );
         });
     });
 
@@ -191,10 +198,15 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user2.address,
                 amountToTransfer
             );
-            await TestHelper.checkResult(inputTransfer, IP3Token.address, user1, ethers, provider, 'ERC20: transfer amount exceeds balance');
-            expect(await IP3Token.balanceOf(user1.address)).to.equal(
-                ethers.BigNumber.from(originalUser1Balance)
+            await TestHelper.checkResult(
+                inputTransfer,
+                IP3Token.address,
+                user1,
+                ethers,
+                provider,
+                'ERC20: transfer amount exceeds balance'
             );
+            expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(originalUser1Balance));
         });
         it('Test transferFrom() without allowance', async () => {
             const originalUser1Balance = await IP3Token.balanceOf(user1.address);
@@ -205,13 +217,16 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user3.address,
                 amountToTransfer
             );
-            await TestHelper.checkResult(inputTransferFrom, IP3Token.address, user2, ethers, provider, 'ERC20: insufficient allowance');
-            expect(await IP3Token.balanceOf(user1.address)).to.equal(
-                ethers.BigNumber.from(originalUser1Balance)
+            await TestHelper.checkResult(
+                inputTransferFrom,
+                IP3Token.address,
+                user2,
+                ethers,
+                provider,
+                'ERC20: insufficient allowance'
             );
-            expect(await IP3Token.balanceOf(user3.address)).to.equal(
-                ethers.BigNumber.from(originalUser3Balance)
-            );
+            expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(originalUser1Balance));
+            expect(await IP3Token.balanceOf(user3.address)).to.equal(ethers.BigNumber.from(originalUser3Balance));
         });
         it('Test transferFrom() without balance', async () => {
             const originalUser1Balance = await IP3Token.balanceOf(user1.address);
@@ -228,13 +243,16 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user3.address,
                 amountToTransfer
             );
-            await TestHelper.checkResult(inputTransferFrom, IP3Token.address, user2, ethers, provider, 'ERC20: transfer amount exceeds balance');
-            expect(await IP3Token.balanceOf(user1.address)).to.equal(
-                ethers.BigNumber.from(originalUser1Balance)
+            await TestHelper.checkResult(
+                inputTransferFrom,
+                IP3Token.address,
+                user2,
+                ethers,
+                provider,
+                'ERC20: transfer amount exceeds balance'
             );
-            expect(await IP3Token.balanceOf(user3.address)).to.equal(
-                ethers.BigNumber.from(originalUser3Balance)
-            );
+            expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(originalUser1Balance));
+            expect(await IP3Token.balanceOf(user3.address)).to.equal(ethers.BigNumber.from(originalUser3Balance));
         });
         it('Test 2x transferFrom() second transferFrom will fail due to remaining allowance to low', async () => {
             const originalOwnerBalance = await IP3Token.balanceOf(owner.address);
@@ -259,8 +277,15 @@ describe('IP3Token - Basic ERC20 functions', function () {
             expect((await IP3Token.balanceOf(user2.address)).toString()).to.equal(
                 ethers.BigNumber.from(originalUser2Balance).add(amountToTransfer)
             );
-            
-            await TestHelper.checkResult(inputTransferFrom, IP3Token.address, user1, ethers, provider, 'ERC20: insufficient allowance');
+
+            await TestHelper.checkResult(
+                inputTransferFrom,
+                IP3Token.address,
+                user1,
+                ethers,
+                provider,
+                'ERC20: insufficient allowance'
+            );
         });
     });
 
@@ -271,11 +296,16 @@ describe('IP3Token - Basic ERC20 functions', function () {
             const originalBalance = await IP3Token.balanceOf(owner.address);
 
             const inputTransfer = await IP3Token.connect(user1).populateTransaction['burn(uint256)'](amountToBurn);
-            await TestHelper.checkResult(inputTransfer, IP3Token.address, user1, ethers, provider, 'ERC20: burn amount exceeds balance');
-
-            expect(await IP3Token.balanceOf(owner.address)).to.equal(
-                ethers.BigNumber.from(originalBalance)
+            await TestHelper.checkResult(
+                inputTransfer,
+                IP3Token.address,
+                user1,
+                ethers,
+                provider,
+                'ERC20: burn amount exceeds balance'
             );
+
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance));
         });
     });
 
