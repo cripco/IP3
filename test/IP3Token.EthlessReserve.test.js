@@ -65,4 +65,48 @@ describe('IP3Token - Ethless Reserve functions', function () {
             );
         });
     });
+
+    describe('IP3Token - Test expecting failure Ethless Reserve', async function () {
+        const amountToReserve = 1000;
+        const feeToPay = 10;
+
+        it('Test Ethless Reserve while reusing the same nonce (and signature) on the second reserve', async () => {
+            const originalBalance = await IP3Token.balanceOf(owner.address);
+
+            const nonce = Date.now();
+            const blockNumber = await provider.getBlockNumber();
+            const expirationBlock = blockNumber + 2000;
+
+            const signature = SignHelper.signReserve(
+                4,
+                network.config.chainId,
+                IP3Token.address,
+                owner.address,
+                owner.privateKey,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256,bytes)'
+            ](
+                owner.address,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock,
+                signature
+            );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'Ethless: nonce already used');
+        });
+    });
 });

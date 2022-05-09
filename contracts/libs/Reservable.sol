@@ -9,10 +9,10 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 
 contract Reservable is ERC20Upgradeable {
     enum ReservationStatus {
-        Draft,      // 0
-        Active,     // 1
-        Reclaimed,  // 2
-        Completed   // 3
+        Draft, // 0
+        Active, // 1
+        Reclaimed, // 2
+        Completed // 3
     }
 
     struct Reservation {

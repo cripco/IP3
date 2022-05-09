@@ -98,7 +98,7 @@ const checkResult = async (input, to, from, ethers, provider, errMsg) => {
             await expect(txn(input, to, from, ethers, provider)).to.be.revertedWith(errMsg);
         } else {
             result = await txn(input, to, from, ethers, provider);
-            expect(result.status).to.equal(1);
+            expect(result.status).to.equal(1 || errMsg);
         }
     } else {
         if (errMsg) {
@@ -106,7 +106,7 @@ const checkResult = async (input, to, from, ethers, provider, errMsg) => {
             expect(result.status).to.equal(0);
         } else {
             result = await txn(input, to, from, ethers, provider);
-            expect(result.status).to.equal(1);
+            expect(result.status).to.equal(1 || errMsg);
         }
     }
 };
