@@ -158,7 +158,14 @@ describe('IP3Token - Reservable functions', function () {
                 owner.address,
                 nonce
             );
-            await TestHelper.checkResult(inputReclaim, IP3Token.address, user3, ethers, provider, 'Reservable: only the sender or the executor can reclaim the reservation back to the sender');
+            await TestHelper.checkResult(
+                inputReclaim,
+                IP3Token.address,
+                user3,
+                ethers,
+                provider,
+                'Reservable: only the sender or the executor can reclaim the reservation back to the sender'
+            );
         });
         it('Test Regular Reserve & Reclaim on non-expired reservation', async () => {
             const originalBalance = await IP3Token.balanceOf(owner.address);
@@ -179,7 +186,28 @@ describe('IP3Token - Reservable functions', function () {
                 owner.address,
                 nonce
             );
-            await TestHelper.checkResult(inputReclaim, IP3Token.address, owner, ethers, provider, 'Reservable: reservation has not expired or you are not the executor and cannot be reclaimed');
+            await TestHelper.checkResult(
+                inputReclaim,
+                IP3Token.address,
+                owner,
+                ethers,
+                provider,
+                'Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
+            );
+        });
+        it('Test Regular ReserveOf on user without reservation', async () => {
+            const reserveOf = await IP3Token.reserveOf(user1.address);
+            expect(reserveOf).to.equal(ethers.BigNumber.from(0));
+        });
+        it('Test GetReservation on non-existing reservation', async () => {
+            const nonce = Date.now();
+            const getReservation = await IP3Token.getReservation(user1.address, nonce);
+            expect(getReservation['amount'], 'amount').to.equal(ethers.BigNumber.from(0));
+            expect(getReservation['fee'], 'fee').to.equal(ethers.BigNumber.from(0));
+            expect(getReservation['recipient'], 'recipient').to.equal(zeroAddress);
+            expect(getReservation['executor'], 'executor').to.equal(zeroAddress);
+            expect(getReservation['expiryBlockNum'], 'expiryBlockNum').to.equal(ethers.BigNumber.from(0));
+            expect(getReservation['status'], 'status').to.equal(0);
         });
     });
 });

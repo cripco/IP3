@@ -82,7 +82,14 @@ describe('IP3Token - Ethless Transfer functions', function () {
             );
             expect(await IP3Token.balanceOf(user2.address)).to.equal(ethers.BigNumber.from(amountToTransfer));
             expect(await IP3Token.balanceOf(user3.address)).to.equal(ethers.BigNumber.from(feeToPay));
-            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'Ethless: nonce already used');
+            await TestHelper.checkResult(
+                input,
+                IP3Token.address,
+                user3,
+                ethers,
+                provider,
+                'Ethless: nonce already used'
+            );
         });
     });
 });
