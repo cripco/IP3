@@ -13,7 +13,7 @@ let user3;
 let IP3Token;
 let provider;
 const zeroAddress = '0x0000000000000000000000000000000000000000';
-const AdminRole = "0x0000000000000000000000000000000000000000000000000000000000000000";
+const AdminRole = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 describe('IP3Token - Events emission', function () {
     before(async () => {
@@ -26,46 +26,31 @@ describe('IP3Token - Events emission', function () {
 
     describe('IP3Token - Events in link with roles', async function () {
         it('Test grantRole() emit RoleGranted', async () => {
-            const input = await IP3Token.connect(owner).grantRole(
-                AdminRole,
-                user1.address
-            );
+            const input = await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "RoleGranted").withArgs(AdminRole, user1.address, owner.address);
+            await expect(input).to.emit(IP3Token, 'RoleGranted').withArgs(AdminRole, user1.address, owner.address);
             expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal("RoleGranted");
+            await expect(receipt.events[0].event).to.be.equal('RoleGranted');
         });
 
         it('Test revokeRole() emit RoleRevoked', async () => {
-            await IP3Token.connect(owner).grantRole(
-                AdminRole,
-                user1.address
-            );
+            await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
 
-            const input = await IP3Token.connect(owner).revokeRole(
-                AdminRole,
-                user1.address
-            );
+            const input = await IP3Token.connect(owner).revokeRole(AdminRole, user1.address);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "RoleRevoked").withArgs(AdminRole, user1.address, owner.address);
+            await expect(input).to.emit(IP3Token, 'RoleRevoked').withArgs(AdminRole, user1.address, owner.address);
             expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal("RoleRevoked");
+            await expect(receipt.events[0].event).to.be.equal('RoleRevoked');
         });
-        
-        it('Test renounceRole() emit RoleRevoked', async () => {
-            await IP3Token.connect(owner).grantRole(
-                AdminRole,
-                user1.address
-            );
 
-            const input = await IP3Token.connect(user1).renounceRole(
-                AdminRole,
-                user1.address
-            );
+        it('Test renounceRole() emit RoleRevoked', async () => {
+            await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
+
+            const input = await IP3Token.connect(user1).renounceRole(AdminRole, user1.address);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "RoleRevoked").withArgs(AdminRole, user1.address, user1.address);
+            await expect(input).to.emit(IP3Token, 'RoleRevoked').withArgs(AdminRole, user1.address, user1.address);
             expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal("RoleRevoked");
+            await expect(receipt.events[0].event).to.be.equal('RoleRevoked');
         });
     });
 
@@ -77,55 +62,47 @@ describe('IP3Token - Events emission', function () {
         const amountToBurn = 100;
 
         it('Test approve() emit Approval', async () => {
-            const input = await IP3Token.connect(owner)['approve(address,uint256)'](
-                user1.address,
-                amountToApprove
-            );
+            const input = await IP3Token.connect(owner)['approve(address,uint256)'](user1.address, amountToApprove);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Approval").withArgs(owner.address, user1.address, amountToApprove);
+            await expect(input).to.emit(IP3Token, 'Approval').withArgs(owner.address, user1.address, amountToApprove);
             expect(receipt.events.length).to.equal(1);
-            expect(receipt.events[0].event).to.be.equal("Approval");
+            expect(receipt.events[0].event).to.be.equal('Approval');
         });
 
         it('Test increaseAllowance() emit Approval', async () => {
-            await IP3Token.connect(owner)['approve(address,uint256)'](
-                user1.address,
-                amountToApprove
-            );
+            await IP3Token.connect(owner)['approve(address,uint256)'](user1.address, amountToApprove);
             const input = await IP3Token.connect(owner)['increaseAllowance(address,uint256)'](
                 user1.address,
                 amountToIncrease
             );
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Approval").withArgs(owner.address, user1.address, ethers.BigNumber.from(amountToApprove).add(amountToIncrease));
+            await expect(input)
+                .to.emit(IP3Token, 'Approval')
+                .withArgs(owner.address, user1.address, ethers.BigNumber.from(amountToApprove).add(amountToIncrease));
             expect(receipt.events.length).to.equal(1);
-            expect(receipt.events[0].event).to.be.equal("Approval");
+            expect(receipt.events[0].event).to.be.equal('Approval');
         });
 
         it('Test decreaseAllowance() emit Approval', async () => {
-            await IP3Token.connect(owner)['approve(address,uint256)'](
-                user1.address,
-                amountToApprove
-            );
+            await IP3Token.connect(owner)['approve(address,uint256)'](user1.address, amountToApprove);
             const input = await IP3Token.connect(owner)['decreaseAllowance(address,uint256)'](
                 user1.address,
                 amountToDecrease
             );
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Approval").withArgs(owner.address, user1.address, ethers.BigNumber.from(amountToApprove).sub(amountToDecrease));
+            await expect(input)
+                .to.emit(IP3Token, 'Approval')
+                .withArgs(owner.address, user1.address, ethers.BigNumber.from(amountToApprove).sub(amountToDecrease));
             expect(receipt.events.length).to.equal(1);
-            expect(receipt.events[0].event).to.be.equal("Approval");
+            expect(receipt.events[0].event).to.be.equal('Approval');
         });
 
         it('Test transfer() emit Transfer', async () => {
-            const input = await IP3Token.connect(owner)['transfer(address,uint256)'](
-                user1.address,
-                amountToTransfer
-            );
+            const input = await IP3Token.connect(owner)['transfer(address,uint256)'](user1.address, amountToTransfer);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Transfer").withArgs(owner.address, user1.address, amountToTransfer);
+            await expect(input).to.emit(IP3Token, 'Transfer').withArgs(owner.address, user1.address, amountToTransfer);
             expect(receipt.events.length).to.equal(1);
-            expect(receipt.events[0].event).to.be.equal("Transfer");
+            expect(receipt.events[0].event).to.be.equal('Transfer');
         });
 
         it('Test transferFrom() emit Transfer', async () => {
@@ -141,21 +118,19 @@ describe('IP3Token - Events emission', function () {
                 amountToTransfer
             );
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Approval").withArgs(owner.address, user2.address, 0);
-            await expect(input).to.emit(IP3Token, "Transfer").withArgs(owner.address, user1.address, amountToTransfer);
+            await expect(input).to.emit(IP3Token, 'Approval').withArgs(owner.address, user2.address, 0);
+            await expect(input).to.emit(IP3Token, 'Transfer').withArgs(owner.address, user1.address, amountToTransfer);
             expect(receipt.events.length).to.equal(2);
-            expect(receipt.events[0].event).to.be.equal("Approval");
-            expect(receipt.events[1].event).to.be.equal("Transfer");
+            expect(receipt.events[0].event).to.be.equal('Approval');
+            expect(receipt.events[1].event).to.be.equal('Transfer');
         });
 
         it('Test burn() emit Transfer', async () => {
-            const input = await IP3Token.connect(owner)['burn(uint256)'](
-                amountToBurn
-            );
+            const input = await IP3Token.connect(owner)['burn(uint256)'](amountToBurn);
             const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, "Transfer").withArgs(owner.address, zeroAddress, amountToBurn);
+            await expect(input).to.emit(IP3Token, 'Transfer').withArgs(owner.address, zeroAddress, amountToBurn);
             expect(receipt.events.length).to.equal(1);
-            expect(receipt.events[0].event).to.be.equal("Transfer");
+            expect(receipt.events[0].event).to.be.equal('Transfer');
         });
     });
 });

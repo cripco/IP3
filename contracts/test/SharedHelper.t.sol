@@ -34,7 +34,7 @@ contract SharedHelper is DSTest {
 
         // Initialize contracts
 
-        IP3Token(ip3Token_).initialize(ip3Token_, NAME, SYMBOL, TOTALSUPPLY);
+        IP3Token(ip3Token_).initialize(testContractAddress_, NAME, SYMBOL, TOTALSUPPLY);
     }
 
     function _changeLogLevel(uint8 newLogLevel_) internal {
