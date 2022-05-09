@@ -16,7 +16,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 describe('IP3Token - Ethless Transfer functions', function () {
     before(async () => {
-        [provider, owner, ownerKey, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
+        [provider, owner, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
     });
 
     beforeEach(async () => {
@@ -42,7 +42,7 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 feeToPay,
                 nonce
             );
-            await IP3Token['transfer(address,address,uint256,uint256,uint256,bytes)'](
+            const input = await IP3Token.connect(user3).populateTransaction['transfer(address,address,uint256,uint256,uint256,bytes)'](
                 owner.address,
                 user2.address,
                 amountToTransfer,
@@ -50,10 +50,12 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 nonce,
                 signature
             );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
             expect(await IP3Token.balanceOf(owner.address)).to.equal(
-                ethers.BigNumber.from(originalBalance).sub(amountToTransfer).add(feeToPay)
+                ethers.BigNumber.from(originalBalance).sub(amountToTransfer).sub(feeToPay)
             );
-            expect((await IP3Token.balanceOf(user2.address)).toString()).to.equal(amountToTransfer.toString());
+            expect(await IP3Token.balanceOf(user2.address)).to.equal(ethers.BigNumber.from(amountToTransfer));
+            expect(await IP3Token.balanceOf(user3.address)).to.equal(ethers.BigNumber.from(feeToPay));
         });
     });
 });

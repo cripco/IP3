@@ -16,7 +16,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 describe('IP3Token - Reservable functions', function () {
     before(async () => {
-        [provider, owner, ownerKey, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
+        [provider, owner, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
     });
 
     beforeEach(async () => {

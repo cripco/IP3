@@ -16,7 +16,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 describe('IP3Token - Ethless Permit functions', function () {
     before(async () => {
-        [provider, owner, ownerKey, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
+        [provider, owner, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
     });
 
     beforeEach(async () => {
@@ -73,7 +73,7 @@ describe('IP3Token - Ethless Permit functions', function () {
                 }
             );
             const splitSignature = ethers.utils.splitSignature(signature);
-            await IP3Token.connect(user1).permit(
+            const input = await IP3Token.connect(user1).populateTransaction.permit(
                 owner.address,
                 user2.address,
                 amountToPermit,
@@ -82,6 +82,7 @@ describe('IP3Token - Ethless Permit functions', function () {
                 splitSignature.r,
                 splitSignature.s
             );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
             expect((await IP3Token.allowance(owner.address, user2.address)).toString()).to.equal(
                 amountToPermit.toString()
             );

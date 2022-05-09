@@ -16,7 +16,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000';
 
 describe('IP3Token - Ethless Reserve functions', function () {
     before(async () => {
-        [provider, owner, ownerKey, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
+        [provider, owner, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
     });
 
     beforeEach(async () => {
@@ -47,7 +47,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 nonce,
                 expirationBlock
             );
-            const input = await IP3Token.connect(owner).populateTransaction[
+            const input = await IP3Token.connect(user3).populateTransaction[
                 'reserve(address,address,address,uint256,uint256,uint256,uint256,bytes)'
             ](
                 owner.address,
@@ -59,7 +59,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 expirationBlock,
                 signature
             );
-            await TestHelper.checkResult(input, IP3Token.address, owner, ethers, provider, 0);
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
             expect(await IP3Token.balanceOf(owner.address)).to.equal(
                 ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
             );

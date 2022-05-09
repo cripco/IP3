@@ -22,7 +22,9 @@ async function main() {
         'UpgradeableIP3Token',
         upgradeableIP3Token.address,
         network.name,
-        deployer.address
+        deployer.address,
+        upgradeableIP3Token.blockHash,
+        upgradeableIP3Token.blockNumber
     );
     console.log(
         '\x1b[32m%s\x1b[0m',
