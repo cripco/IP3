@@ -1,4 +1,4 @@
-# IP3Token and IP3VestingBoard
+# IP3Token
 
 This project include the IP3 token.
 

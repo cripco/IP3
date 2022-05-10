@@ -9,10 +9,10 @@ import '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 
 contract Reservable is ERC20Upgradeable {
     enum ReservationStatus {
-        Draft,      // 0
-        Active,     // 1
-        Reclaimed,  // 2
-        Completed   // 3
+        Draft, // 0
+        Active, // 1
+        Reclaimed, // 2
+        Completed // 3
     }
 
     struct Reservation {
@@ -41,6 +41,8 @@ contract Reservable is ERC20Upgradeable {
         uint256 nonce_,
         uint256 deadline_
     ) internal {
+        require(deadline_ > block.number, 'Reservable: deadline must be in the future');
+        require(balanceOf(from_) >= amount_ + executionFee_, 'Reservable: reserve amount exceeds balance');
         _reservation[from_][nonce_] = Reservation(
             amount_,
             executionFee_,

@@ -18,7 +18,7 @@ const zeroAddress = '0x0000000000000000000000000000000000000000';
 describe('IP3Token - Boundary', function () {
     let originalBalance;
     before(async () => {
-        [provider, owner, owner.privateKey, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
+        [provider, owner, user1, user2, user3] = await TestHelper.setupProviderAndWallet();
     });
 
     beforeEach(async () => {
@@ -1230,7 +1230,7 @@ describe('IP3Token - Boundary', function () {
     describe('Test random string on different fn()', () => {
         it('Test burn() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
             let msg;
             try {
                 const inputBurn = await IP3Token.connect(owner).populateTransaction['burn(uint256)'](randomString);
@@ -1243,7 +1243,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test burn(w/ signature) w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
 
             const feeToPay = 10;
             const nonce = Date.now();
@@ -1272,7 +1272,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test transfer() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
 
             let msg;
             try {
@@ -1291,7 +1291,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test transferFrom() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
 
             const inputApprove = await IP3Token.connect(owner).populateTransaction.approve(
                 user1.address,
@@ -1316,7 +1316,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test transfer(w/ signature) w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
 
             const feeToPay = 10;
             const nonce = Date.now();
@@ -1347,7 +1347,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test reserve(w/ signature) w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
 
             const feeToPay = 10;
             const nonce = Date.now();
@@ -1392,7 +1392,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test approve() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
             let msg;
             try {
                 const input = await IP3Token.connect(owner).populateTransaction.approve(IP3Token.address, randomString);
@@ -1405,7 +1405,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test increaseAllowance() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
             const input = await IP3Token.connect(owner).populateTransaction.approve(
                 IP3Token.address,
                 ethers.BigNumber.from(10000)
@@ -1433,7 +1433,7 @@ describe('IP3Token - Boundary', function () {
         });
         it('Test decreaseAllowance() w/ random string', async () => {
             var chance = new Chance();
-            const randomString = chance.string();
+            const randomString = chance.string({ alpha: true, numeric: false, symbols: false, length: 10 });
             const inputApprove = await IP3Token.connect(owner).populateTransaction.approve(
                 IP3Token.address,
                 ethers.BigNumber.from(10000)

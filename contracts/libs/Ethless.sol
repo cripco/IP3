@@ -19,7 +19,7 @@ contract Ethless is Reservable {
         RESERVE // 4
     }
 
-    mapping(address => mapping(uint256 => EthlessTxnType)) private _nonceUsed;
+    mapping(address => mapping(uint256 => mapping(EthlessTxnType => bool))) private _nonceUsed;
 
     function __Ethless_init_unchained() internal onlyInitializing {}
 
@@ -28,8 +28,8 @@ contract Ethless is Reservable {
         uint256 nonce_,
         EthlessTxnType txnType_
     ) internal {
-        require(_nonceUsed[signer_][nonce_] == EthlessTxnType.NONE, 'Ethless: nonce already used');
-        _nonceUsed[signer_][nonce_] = txnType_;
+        require(!_nonceUsed[signer_][nonce_][txnType_], 'Ethless: nonce already used');
+        _nonceUsed[signer_][nonce_][txnType_] = true;
     }
 
     function _validateEthlessHash(
@@ -69,7 +69,7 @@ contract Ethless is Reservable {
         uint256 nonce_,
         bytes calldata signature_
     ) external returns (bool succcess) {
-        _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
+        _useNonce(signer_, nonce_, EthlessTxnType.BURN);
 
         bytes32 structHash = keccak256(
             abi.encodePacked(EthlessTxnType.BURN, block.chainid, address(this), signer_, amount_, fee_, nonce_)
@@ -91,7 +91,7 @@ contract Ethless is Reservable {
         uint256 deadline_,
         bytes calldata signature_
     ) external returns (bool succcess) {
-        _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
+        _useNonce(signer_, nonce_, EthlessTxnType.RESERVE);
 
         bytes32 structHash = keccak256(
             abi.encodePacked(

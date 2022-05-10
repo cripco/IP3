@@ -1,4 +1,4 @@
-// const { web3, ethers } = require("hardhat");
+const { ethers, network } = require('hardhat');
 var Web3 = require('web3');
 var web3 = new Web3(Web3.givenProvider);
 
@@ -74,5 +74,57 @@ module.exports = {
         var signature = obj.signature;
 
         return signature;
+    },
+    signPermit: async function (
+        name,
+        version,
+        contractAddress,
+        wallet,
+        targetAddress,
+        amount,
+        nonce,
+        expirationTimestamp
+    ) {
+        const signature = await wallet._signTypedData(
+            {
+                name,
+                version,
+                chainId: network.config.chainId,
+                verifyingContract: contractAddress
+            },
+            {
+                // Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
+                Permit: [
+                    {
+                        name: 'owner',
+                        type: 'address'
+                    },
+                    {
+                        name: 'spender',
+                        type: 'address'
+                    },
+                    {
+                        name: 'value',
+                        type: 'uint256'
+                    },
+                    {
+                        name: 'nonce',
+                        type: 'uint256'
+                    },
+                    {
+                        name: 'deadline',
+                        type: 'uint256'
+                    }
+                ]
+            },
+            {
+                owner: wallet.address,
+                spender: targetAddress,
+                value: amount,
+                nonce,
+                deadline: expirationTimestamp
+            }
+        );
+        return ethers.utils.splitSignature(signature);
     }
 };
