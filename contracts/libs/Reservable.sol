@@ -41,6 +41,8 @@ contract Reservable is ERC20Upgradeable {
         uint256 nonce_,
         uint256 deadline_
     ) internal {
+        require(deadline_ > block.number, 'Reservable: deadline must be in the future');
+        require(balanceOf(from_) >= amount_ + executionFee_ , "Reservable: reserve amount exceeds balance");
         _reservation[from_][nonce_] = Reservation(
             amount_,
             executionFee_,

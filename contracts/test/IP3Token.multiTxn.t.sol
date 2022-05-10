@@ -15,10 +15,6 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
     uint8 LOG_LEVEL = 0;
 
-    address user1 = address(1);
-    address user2 = address(2);
-    address user3 = address(3);
-
     function setUp() public {
         // Deploy contracts
         iP3Token = new IP3Token();
@@ -30,53 +26,138 @@ contract IP3TokenTest is DSTest, SharedHelper {
     // Complex scenario
     function test_IP3Token_multiTxn_transferAndBurn_sameBlock() public {
         uint256 AMOUNT_TO_TRANSFER = 100 * 10**18;
-        iP3Token.transfer(user1, AMOUNT_TO_TRANSFER);
+        iP3Token.transfer(USER1, AMOUNT_TO_TRANSFER);
 
-        vm.prank(user1);
+        vm.prank(USER1);
         iP3Token.burn(AMOUNT_TO_TRANSFER);
 
         assertEq(iP3Token.balanceOf(address(this)), TOTALSUPPLY - AMOUNT_TO_TRANSFER);
-        assertEq(iP3Token.balanceOf(user1), 0);
+        assertEq(iP3Token.balanceOf(USER1), 0);
     }
 
     function test_IP3Token_multiTxn_permitAndTransferFrom_sameBlock() public {
         uint256 AMOUNT_TO_TRANSFER = 100 * 10**18;
 
-        uint256 user1PrivateKey = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
-        user1 = vm.addr(user1PrivateKey);
-
-        iP3Token.transfer(user1, AMOUNT_TO_TRANSFER);
+        iP3Token.transfer(USER1, AMOUNT_TO_TRANSFER);
 
         uint256 deadline = block.number + 100;
-        (uint8 signV, bytes32 signR, bytes32 signS) = vm.sign(
-            user1PrivateKey,
-            keccak256(
-                abi.encodePacked(
-                    '\x19\x01',
-                    iP3Token.DOMAIN_SEPARATOR(),
-                    keccak256(
-                        abi.encode(
-                            keccak256(
-                                'Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)'
-                            ),
-                            user1,
-                            user3,
-                            AMOUNT_TO_TRANSFER,
-                            iP3Token.nonces(user1),
-                            deadline
-                        )
-                    )
-                )
-            )
+        
+        eip712_permit_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            AMOUNT_TO_TRANSFER, 
+            iP3Token.nonces(USER1),
+            USER3,
+            USER2,
+            deadline
         );
 
-        vm.prank(user2);
-        iP3Token.permit(user1, user3, AMOUNT_TO_TRANSFER, deadline, signV, signR, signS);
-        assertEq(iP3Token.allowance(user1, user3), AMOUNT_TO_TRANSFER);
+        vm.prank(USER3);
 
-        vm.prank(user3);
+        iP3Token.transferFrom(USER1, USER2, AMOUNT_TO_TRANSFER);
+        assertEq(iP3Token.balanceOf(USER2), AMOUNT_TO_TRANSFER);
+    }
 
-        iP3Token.transferFrom(user1, user2, AMOUNT_TO_TRANSFER);
-        assertEq(iP3Token.balanceOf(user2), AMOUNT_TO_TRANSFER);
+    function test_IP3Token_multiTxn_allEthless_sameNonce_sameBlock() public {
+        uint256 AMOUNT_TO_TRANSFER = 100 * 10**18;
+        uint256 AMOUNT_TO_BURN = 30 * 10**18;
+        uint256 AMOUNT_TO_RESERVE = 40 * 10**18;
+        uint256 deadline = block.number + 100;
+        uint256 feeToPay = 100;
+        uint256 nonce = 54645;
+
+        eip191_transfer_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            AMOUNT_TO_TRANSFER,
+            feeToPay,
+            nonce,
+            USER3,
+            USER2,
+            true
+        );
+
+        eip191_burn_verified(
+            USER3,
+            USER3_PRIVATEKEY,
+            AMOUNT_TO_BURN,
+            feeToPay,
+            nonce,
+            USER2,
+            false
+        );
+
+        eip191_reserve_verified(
+            USER3,
+            USER3_PRIVATEKEY,
+            AMOUNT_TO_RESERVE,
+            feeToPay,
+            nonce,
+            USER4,
+            USER5,
+            USER2,
+            deadline,
+            false
+        );
+    }
+
+    function test_IP3Token_multiTxn_eip191_burnAfterTransfer_sameBlock() public {
+        uint256 amountToTransfer = 1000;
+        uint256 amountToBurn = 600;
+        uint256 feeToPay = 100;
+        uint256 nonce = 54645;
+
+        eip191_transfer_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            amountToTransfer,
+            feeToPay,
+            nonce,
+            USER3,
+            USER2,
+            true
+        );
+
+        eip191_burn(
+            USER3,
+            USER3_PRIVATEKEY,
+            amountToBurn,
+            feeToPay,
+            nonce,
+            USER2,
+            false
+        );
+    }
+
+    function test_IP3Token_multiTxn_eip191_reserveAfterTransfer_sameBlock() public {
+        uint256 amountToTransfer = 1000;
+        uint256 amountToReserve = 600;
+        uint256 feeToPay = 100;
+        uint256 nonce = 54645;
+        uint256 deadline = block.number + 100;
+
+        eip191_transfer_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            amountToTransfer,
+            feeToPay,
+            nonce,
+            USER3,
+            USER2,
+            true
+        );
+
+        eip191_reserve_verified(
+            USER3,
+            USER3_PRIVATEKEY,
+            amountToReserve,
+            feeToPay,
+            nonce,
+            USER4,
+            USER5,
+            USER2,
+            deadline,
+            false
+        );
     }
 }

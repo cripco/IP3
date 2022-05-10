@@ -23,55 +23,51 @@ contract IP3TokenTest is DSTest, SharedHelper {
         if (LOG_LEVEL > 0) _changeLogLevel(LOG_LEVEL);
     }
 
-    // Ethless Transfer
-    function test_IP3Token_ethless_transfer() public {
-        uint256 amountToTransfer = 1000;
+    // Ethless Burn
+    function test_IP3Token_ethless_burn() public {
+        uint256 amountToBurn = 1000;
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_transfer_verified(
+        eip191_burn_verified(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer,
+            amountToBurn,
             feeToPay,
             nonce,
-            USER3,
             USER2,
             true
         );
     }
 
-    function test_IP3Token_ethless_transfer_reuseSameNonce() public {
-        uint256 amountToTransfer = 1000;
+    function test_IP3Token_ethless_burn_reuseSameNonce() public {
+        uint256 amountToBurn = 1000;
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_transfer_verified(
+        eip191_burn_verified(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer,
+            amountToBurn,
             feeToPay,
             nonce,
-            USER3,
             USER2,
             true
         );
 
-        bytes memory signature = eip191_sign_transfer(
+        bytes memory signature = eip191_sign_burn(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer, 
+            amountToBurn, 
             feeToPay, 
-            nonce,
-            USER3
+            nonce
         );
 
         vm.prank(USER2);
         vm.expectRevert('Ethless: nonce already used');
-        IP3Token(_ip3Token).transfer(
+        IP3Token(_ip3Token).burn(
             USER1,
-            USER3,
-            amountToTransfer,
+            amountToBurn,
             feeToPay,
             nonce,
             signature

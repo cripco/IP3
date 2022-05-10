@@ -23,57 +23,67 @@ contract IP3TokenTest is DSTest, SharedHelper {
         if (LOG_LEVEL > 0) _changeLogLevel(LOG_LEVEL);
     }
 
-    // Ethless Transfer
-    function test_IP3Token_ethless_transfer() public {
-        uint256 amountToTransfer = 1000;
+    // Ethless Reserve
+    function test_IP3Token_ethless_reserve() public {
+        uint256 amountToReserve = 1000;
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
+        uint256 deadline = block.number + 10;
 
-        eip191_transfer_verified(
+        eip191_reserve_verified(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer,
+            amountToReserve,
             feeToPay,
             nonce,
             USER3,
+            USER4,
             USER2,
+            deadline,
             true
         );
     }
-
-    function test_IP3Token_ethless_transfer_reuseSameNonce() public {
-        uint256 amountToTransfer = 1000;
+    
+    function test_IP3Token_ethless_reserve_reuseSameNonce() public {
+        uint256 amountToReserve = 1000;
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
+        uint256 deadline = block.number + 10;
 
-        eip191_transfer_verified(
+        eip191_reserve_verified(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer,
+            amountToReserve,
             feeToPay,
             nonce,
             USER3,
+            USER4,
             USER2,
+            deadline,
             true
         );
 
-        bytes memory signature = eip191_sign_transfer(
+        bytes memory signature = eip191_sign_reserve(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer, 
+            amountToReserve, 
             feeToPay, 
             nonce,
-            USER3
+            USER3,
+            USER4,
+            deadline
         );
 
         vm.prank(USER2);
         vm.expectRevert('Ethless: nonce already used');
-        IP3Token(_ip3Token).transfer(
+        IP3Token(_ip3Token).reserve(
             USER1,
             USER3,
-            amountToTransfer,
+            USER4,
+            amountToReserve,
             feeToPay,
             nonce,
+            deadline,
             signature
         );
     }

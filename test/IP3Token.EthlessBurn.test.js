@@ -88,5 +88,74 @@ describe('IP3Token - Ethless Burn functions', function () {
                 'Ethless: nonce already used'
             );
         });
+
+        it('Test Ethless burn while amountToBurn + feeToPay is higher than the balance', async () => {
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
+                'transfer(address,uint256)'
+            ](user1.address, amountToBurn - feeToPay / 2);
+            await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
+
+            const nonce = Date.now();
+            const signature = SignHelper.signBurn(
+                1,
+                network.config.chainId,
+                IP3Token.address,
+                user1.address,
+                user1.privateKey,
+                amountToBurn,
+                feeToPay,
+                nonce
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'burn(address,uint256,uint256,uint256,bytes)'
+            ](user1.address, amountToBurn, feeToPay, nonce, signature);
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: burn amount exceeds balance');
+        });
+
+        it('Test Ethless burn while amountToBurn is higher than the balance', async () => {
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
+                'transfer(address,uint256)'
+            ](user1.address, amountToBurn - feeToPay);
+            await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
+
+            const nonce = Date.now();
+            const signature = SignHelper.signBurn(
+                1,
+                network.config.chainId,
+                IP3Token.address,
+                user1.address,
+                user1.privateKey,
+                amountToBurn,
+                feeToPay,
+                nonce
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'burn(address,uint256,uint256,uint256,bytes)'
+            ](user1.address, amountToBurn, feeToPay, nonce, signature);
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: burn amount exceeds balance');
+        });
+
+        it('Test Ethless burn while feeToPay is higher than the balance', async () => {
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
+                'transfer(address,uint256)'
+            ](user1.address, feeToPay / 2);
+            await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
+
+            const nonce = Date.now();
+            const signature = SignHelper.signBurn(
+                1,
+                network.config.chainId,
+                IP3Token.address,
+                user1.address,
+                user1.privateKey,
+                amountToBurn,
+                feeToPay,
+                nonce
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'burn(address,uint256,uint256,uint256,bytes)'
+            ](user1.address, amountToBurn, feeToPay, nonce, signature);
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: transfer amount exceeds balance');
+        });
     });
 });

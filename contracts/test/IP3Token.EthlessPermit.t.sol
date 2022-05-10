@@ -15,10 +15,6 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
     uint8 LOG_LEVEL = 0;
 
-    address user1 = address(1);
-    address user2 = address(2);
-    address user3 = address(3);
-
     function setUp() public {
         // Deploy contracts
         iP3Token = new IP3Token();
@@ -29,35 +25,54 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
     // Ethless Permit
     function test_IP3Token_ethless_permit() public {
-        uint256 user1PrivateKey = 0x59c6995e998f97a5a0044966f0945389dc9e86dae88c7a8412f4603b6b78690d;
-        user1 = vm.addr(user1PrivateKey);
-
         uint256 amountToPermit = 10_000;
         uint256 deadline = block.number + 100;
-        (uint8 signV, bytes32 signR, bytes32 signS) = vm.sign(
-            user1PrivateKey,
-            keccak256(
-                abi.encodePacked(
-                    '\x19\x01',
-                    iP3Token.DOMAIN_SEPARATOR(),
-                    keccak256(
-                        abi.encode(
-                            keccak256(
-                                'Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)'
-                            ),
-                            user1,
-                            user3,
-                            amountToPermit,
-                            iP3Token.nonces(user1),
-                            deadline
-                        )
-                    )
-                )
-            )
+        eip712_permit_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            amountToPermit, 
+            iP3Token.nonces(USER1),
+            USER3,
+            USER2,
+            deadline
+        );
+    }
+
+    // Ethless Permit
+    function test_IP3Token_ethless_permit_reuseSameNonce() public {
+        uint256 amountToPermit = 10_000;
+        uint256 deadline = block.number + 100;
+        uint256 nonce = iP3Token.nonces(USER1);
+
+        eip712_permit_verified(
+            USER1,
+            USER1_PRIVATEKEY,
+            amountToPermit, 
+            nonce,
+            USER3,
+            USER2,
+            deadline
         );
 
-        vm.prank(user2);
-        iP3Token.permit(user1, user3, amountToPermit, deadline, signV, signR, signS);
-        assertEq(iP3Token.allowance(user1, user3), amountToPermit);
+        (uint8 signV, bytes32 signR, bytes32 signS) = eip712_sign_permit(
+            USER1,
+            USER1_PRIVATEKEY,
+            amountToPermit * 2, 
+            nonce,
+            USER3,
+            deadline
+        );
+
+        vm.prank(USER2);
+        vm.expectRevert('ERC20Permit: invalid signature');
+        iP3Token.permit(
+            USER1, 
+            USER3, 
+            amountToPermit * 2, 
+            deadline, 
+            signV, 
+            signR, 
+            signS
+        );
     }
 }

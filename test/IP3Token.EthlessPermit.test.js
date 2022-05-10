@@ -33,47 +33,16 @@ describe('IP3Token - Ethless Permit functions', function () {
             const expirationTimestamp = block.timestamp + 20000;
             const nonce = await IP3Token.nonces(owner.address);
 
-            const signature = await owner._signTypedData(
-                {
-                    name: TestHelper.NAME,
-                    version: TestHelper.VERSION_712,
-                    chainId: network.config.chainId,
-                    verifyingContract: IP3Token.address
-                },
-                {
-                    // Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
-                    Permit: [
-                        {
-                            name: 'owner',
-                            type: 'address'
-                        },
-                        {
-                            name: 'spender',
-                            type: 'address'
-                        },
-                        {
-                            name: 'value',
-                            type: 'uint256'
-                        },
-                        {
-                            name: 'nonce',
-                            type: 'uint256'
-                        },
-                        {
-                            name: 'deadline',
-                            type: 'uint256'
-                        }
-                    ]
-                },
-                {
-                    owner: owner.address,
-                    spender: user2.address,
-                    value: amountToPermit,
-                    nonce: nonce,
-                    deadline: expirationTimestamp
-                }
+            const splitSignature = await SignHelper.signPermit(
+                TestHelper.NAME,
+                TestHelper.VERSION_712,
+                IP3Token.address,
+                owner,
+                user2.address,
+                amountToPermit,
+                nonce.toNumber(),
+                expirationTimestamp
             );
-            const splitSignature = ethers.utils.splitSignature(signature);
             const input = await IP3Token.connect(user1).populateTransaction.permit(
                 owner.address,
                 user2.address,
@@ -95,47 +64,16 @@ describe('IP3Token - Ethless Permit functions', function () {
             const expirationTimestamp = block.timestamp + 20000;
             const nonce = await IP3Token.nonces(owner.address);
 
-            const signature = await owner._signTypedData(
-                {
-                    name: TestHelper.NAME,
-                    version: TestHelper.VERSION_712,
-                    chainId: network.config.chainId,
-                    verifyingContract: IP3Token.address
-                },
-                {
-                    // Permit(address owner,address spender,uint256 value,uint256 nonce,uint256 deadline)
-                    Permit: [
-                        {
-                            name: 'owner',
-                            type: 'address'
-                        },
-                        {
-                            name: 'spender',
-                            type: 'address'
-                        },
-                        {
-                            name: 'value',
-                            type: 'uint256'
-                        },
-                        {
-                            name: 'nonce',
-                            type: 'uint256'
-                        },
-                        {
-                            name: 'deadline',
-                            type: 'uint256'
-                        }
-                    ]
-                },
-                {
-                    owner: owner.address,
-                    spender: user2.address,
-                    value: amountToPermit,
-                    nonce: nonce,
-                    deadline: expirationTimestamp
-                }
+            const splitSignature = await SignHelper.signPermit(
+                TestHelper.NAME,
+                TestHelper.VERSION_712,
+                IP3Token.address,
+                owner,
+                user2.address,
+                amountToPermit,
+                nonce.toNumber(),
+                expirationTimestamp
             );
-            const splitSignature = ethers.utils.splitSignature(signature);
             const input = await IP3Token.connect(user1).populateTransaction.permit(
                 owner.address,
                 user2.address,
