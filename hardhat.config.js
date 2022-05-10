@@ -57,7 +57,7 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
     },
     kaleido: {
       url:  `https://${process.env.RPC_KALEIDO_USER}:${process.env.RPC_KALEIDO_PASS}@${process.env.RPC_KALEIDO_ENDPOINT}`,
-      chainId: 1245549440,
+      chainId: 1952923003,
       accounts: {
         mnemonic: `${process.env.KALEIDO_MNEMONIC}`,
         path: "m/44'/60'/0'/0",
