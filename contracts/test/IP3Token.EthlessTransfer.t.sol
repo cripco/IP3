@@ -29,16 +29,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_transfer_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToTransfer,
-            feeToPay,
-            nonce,
-            USER3,
-            USER2,
-            true
-        );
+        eip191_transfer_verified(USER1, USER1_PRIVATEKEY, amountToTransfer, feeToPay, nonce, USER3, USER2, true);
     }
 
     function test_IP3Token_ethless_transfer_reuseSameNonce() public {
@@ -46,35 +37,19 @@ contract IP3TokenTest is DSTest, SharedHelper {
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_transfer_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToTransfer,
-            feeToPay,
-            nonce,
-            USER3,
-            USER2,
-            true
-        );
+        eip191_transfer_verified(USER1, USER1_PRIVATEKEY, amountToTransfer, feeToPay, nonce, USER3, USER2, true);
 
         bytes memory signature = eip191_sign_transfer(
             USER1,
             USER1_PRIVATEKEY,
-            amountToTransfer, 
-            feeToPay, 
+            amountToTransfer,
+            feeToPay,
             nonce,
             USER3
         );
 
         vm.prank(USER2);
         vm.expectRevert('Ethless: nonce already used');
-        IP3Token(_ip3Token).transfer(
-            USER1,
-            USER3,
-            amountToTransfer,
-            feeToPay,
-            nonce,
-            signature
-        );
+        IP3Token(_ip3Token).transfer(USER1, USER3, amountToTransfer, feeToPay, nonce, signature);
     }
 }

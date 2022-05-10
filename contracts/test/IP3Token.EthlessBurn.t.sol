@@ -29,15 +29,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_burn_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToBurn,
-            feeToPay,
-            nonce,
-            USER2,
-            true
-        );
+        eip191_burn_verified(USER1, USER1_PRIVATEKEY, amountToBurn, feeToPay, nonce, USER2, true);
     }
 
     function test_IP3Token_ethless_burn_reuseSameNonce() public {
@@ -45,32 +37,12 @@ contract IP3TokenTest is DSTest, SharedHelper {
         uint256 feeToPay = 100;
         uint256 nonce = 54645;
 
-        eip191_burn_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToBurn,
-            feeToPay,
-            nonce,
-            USER2,
-            true
-        );
+        eip191_burn_verified(USER1, USER1_PRIVATEKEY, amountToBurn, feeToPay, nonce, USER2, true);
 
-        bytes memory signature = eip191_sign_burn(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToBurn, 
-            feeToPay, 
-            nonce
-        );
+        bytes memory signature = eip191_sign_burn(USER1, USER1_PRIVATEKEY, amountToBurn, feeToPay, nonce);
 
         vm.prank(USER2);
         vm.expectRevert('Ethless: nonce already used');
-        IP3Token(_ip3Token).burn(
-            USER1,
-            amountToBurn,
-            feeToPay,
-            nonce,
-            signature
-        );
+        IP3Token(_ip3Token).burn(USER1, amountToBurn, feeToPay, nonce, signature);
     }
 }

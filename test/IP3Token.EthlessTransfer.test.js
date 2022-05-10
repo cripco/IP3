@@ -140,9 +140,10 @@ describe('IP3Token - Ethless Transfer functions', function () {
         });
 
         it('Test Ethless transfer while while amountToTransfer + feeToPay is higher than the balance', async () => {
-            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
-                'transfer(address,uint256)'
-            ](user2.address, amountToTransfer - feeToPay / 2);
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](
+                user2.address,
+                amountToTransfer - feeToPay / 2
+            );
             await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
 
             const nonce = Date.now();
@@ -160,13 +161,21 @@ describe('IP3Token - Ethless Transfer functions', function () {
             const input = await IP3Token.connect(user3).populateTransaction[
                 'transfer(address,address,uint256,uint256,uint256,bytes)'
             ](user2.address, user3.address, amountToTransfer, feeToPay, nonce, signature);
-            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: transfer amount exceeds balance');
+            await TestHelper.checkResult(
+                input,
+                IP3Token.address,
+                user3,
+                ethers,
+                provider,
+                'ERC20: transfer amount exceeds balance'
+            );
         });
 
         it('Test Ethless transfer while while amountToTransfer is higher than the balance', async () => {
-            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
-                'transfer(address,uint256)'
-            ](user2.address, amountToTransfer - feeToPay);
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](
+                user2.address,
+                amountToTransfer - feeToPay
+            );
             await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
 
             const nonce = Date.now();
@@ -184,13 +193,21 @@ describe('IP3Token - Ethless Transfer functions', function () {
             const input = await IP3Token.connect(user3).populateTransaction[
                 'transfer(address,address,uint256,uint256,uint256,bytes)'
             ](user2.address, user3.address, amountToTransfer, feeToPay, nonce, signature);
-            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: transfer amount exceeds balance');
+            await TestHelper.checkResult(
+                input,
+                IP3Token.address,
+                user3,
+                ethers,
+                provider,
+                'ERC20: transfer amount exceeds balance'
+            );
         });
 
         it('Test Ethless transfer while while feeToPay is higher than the balance', async () => {
-            const inputTransfer = await IP3Token.connect(owner).populateTransaction[
-                'transfer(address,uint256)'
-            ](user2.address, feeToPay / 2);
+            const inputTransfer = await IP3Token.connect(owner).populateTransaction['transfer(address,uint256)'](
+                user2.address,
+                feeToPay / 2
+            );
             await TestHelper.checkResult(inputTransfer, IP3Token.address, owner, ethers, provider, 0);
 
             const nonce = Date.now();
@@ -208,7 +225,14 @@ describe('IP3Token - Ethless Transfer functions', function () {
             const input = await IP3Token.connect(user3).populateTransaction[
                 'transfer(address,address,uint256,uint256,uint256,bytes)'
             ](user2.address, user3.address, amountToTransfer, feeToPay, nonce, signature);
-            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 'ERC20: transfer amount exceeds balance');
+            await TestHelper.checkResult(
+                input,
+                IP3Token.address,
+                user3,
+                ethers,
+                provider,
+                'ERC20: transfer amount exceeds balance'
+            );
         });
     });
 });

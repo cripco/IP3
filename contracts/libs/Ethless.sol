@@ -53,16 +53,7 @@ contract Ethless is Reservable {
         _useNonce(signer_, nonce_, EthlessTxnType.TRANSFER);
 
         bytes32 structHash = keccak256(
-            abi.encodePacked(
-                EthlessTxnType.TRANSFER, 
-                block.chainid, 
-                address(this), 
-                signer_, 
-                to_, 
-                amount_, 
-                fee_, 
-                nonce_
-            )
+            abi.encodePacked(EthlessTxnType.TRANSFER, block.chainid, address(this), signer_, to_, amount_, fee_, nonce_)
         );
         _validateEthlessHash(signer_, structHash, signature_);
 

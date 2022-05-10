@@ -43,7 +43,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
             true
         );
     }
-    
+
     function test_IP3Token_ethless_reserve_reuseSameNonce() public {
         uint256 amountToReserve = 1000;
         uint256 feeToPay = 100;
@@ -66,8 +66,8 @@ contract IP3TokenTest is DSTest, SharedHelper {
         bytes memory signature = eip191_sign_reserve(
             USER1,
             USER1_PRIVATEKEY,
-            amountToReserve, 
-            feeToPay, 
+            amountToReserve,
+            feeToPay,
             nonce,
             USER3,
             USER4,
@@ -76,15 +76,6 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
         vm.prank(USER2);
         vm.expectRevert('Ethless: nonce already used');
-        IP3Token(_ip3Token).reserve(
-            USER1,
-            USER3,
-            USER4,
-            amountToReserve,
-            feeToPay,
-            nonce,
-            deadline,
-            signature
-        );
+        IP3Token(_ip3Token).reserve(USER1, USER3, USER4, amountToReserve, feeToPay, nonce, deadline, signature);
     }
 }

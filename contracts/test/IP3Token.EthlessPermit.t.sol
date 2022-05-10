@@ -27,15 +27,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
     function test_IP3Token_ethless_permit() public {
         uint256 amountToPermit = 10_000;
         uint256 deadline = block.number + 100;
-        eip712_permit_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToPermit, 
-            iP3Token.nonces(USER1),
-            USER3,
-            USER2,
-            deadline
-        );
+        eip712_permit_verified(USER1, USER1_PRIVATEKEY, amountToPermit, iP3Token.nonces(USER1), USER3, USER2, deadline);
     }
 
     // Ethless Permit
@@ -44,20 +36,12 @@ contract IP3TokenTest is DSTest, SharedHelper {
         uint256 deadline = block.number + 100;
         uint256 nonce = iP3Token.nonces(USER1);
 
-        eip712_permit_verified(
-            USER1,
-            USER1_PRIVATEKEY,
-            amountToPermit, 
-            nonce,
-            USER3,
-            USER2,
-            deadline
-        );
+        eip712_permit_verified(USER1, USER1_PRIVATEKEY, amountToPermit, nonce, USER3, USER2, deadline);
 
         (uint8 signV, bytes32 signR, bytes32 signS) = eip712_sign_permit(
             USER1,
             USER1_PRIVATEKEY,
-            amountToPermit * 2, 
+            amountToPermit * 2,
             nonce,
             USER3,
             deadline
@@ -65,14 +49,6 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
         vm.prank(USER2);
         vm.expectRevert('ERC20Permit: invalid signature');
-        iP3Token.permit(
-            USER1, 
-            USER3, 
-            amountToPermit * 2, 
-            deadline, 
-            signV, 
-            signR, 
-            signS
-        );
+        iP3Token.permit(USER1, USER3, amountToPermit * 2, deadline, signV, signR, signS);
     }
 }
