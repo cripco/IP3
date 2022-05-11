@@ -12,7 +12,7 @@ async function main() {
     // Contract deployed with transparent proxy
     const UpgradeableIP3Token = await ethers.getContractFactory('IP3Token');
     const upgradeableIP3Token = await upgrades.deployProxy(UpgradeableIP3Token, [
-        owner.address, 
+        deployer.address, 
         TestHelper.NAME, 
         TestHelper.SYMBOL, 
         TestHelper.TOTALSUPPLY
@@ -31,6 +31,23 @@ async function main() {
         'UpgradeableIP3Token deployed at address: ',
         upgradeableIP3Token.address
     );
+
+    // Get ProxyAdmin address from .openzeppelin/
+    const ProxyAdmin_Address = await addressBook.retrieveOZAdminProxyContract(network.config.chainId);
+    console.log('Deployed using Proxy Admin contract address: ', ProxyAdmin_Address);
+    addressBook.saveContract('ProxyAdmin', ProxyAdmin_Address, network.name, deployer.address);
+    console.log('\x1b[32m%s\x1b[0m', 'Account balance: ', (await deployer.getBalance()).toString());
+
+    // Get Logic/Implementation address from proxy admin contract
+    const LogicIP3Token = await ScriptHelper.getImplementation(
+        upgradeableIP3Token.address,
+        ProxyAdmin_Address,
+        deployer,
+        ethers
+    );
+    console.log('Deployed using Logic/Implementation contract address: ', LogicIP3Token);
+    addressBook.saveContract('LogicIP3Token', LogicIP3Token, network.name, deployer.address);
+    console.log('\x1b[32m%s\x1b[0m', 'Account balance: ', (await deployer.getBalance()).toString());
 
     console.log('Contract deployed!');
 }

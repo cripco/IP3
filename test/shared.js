@@ -62,7 +62,7 @@ const setupContractTesting = async (owner) => {
 
         await IP3Token.initialize(owner.address, NAME, SYMBOL, TOTALSUPPLY);
     } else {
-        const IP3TokenAddress = await addressBook.retrieveContract('IP3Token', network.name);
+        const IP3TokenAddress = await addressBook.retrieveContract('UpgradeableIP3Token', network.name);
 
         IP3Token = await new ethers.Contract(IP3TokenAddress, FactoryIP3Token.interface, owner.address);
         if (!skipInitializeContracts) {
