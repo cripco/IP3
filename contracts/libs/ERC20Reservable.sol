@@ -89,7 +89,7 @@ contract ERC20Reservable is ERC20Upgradeable {
         return true;
     }
 
-    function execute(address from_, uint256 nonce_) public returns (bool success) {
+    function execute(address from_, uint256 nonce_) external returns (bool success) {
         Reservation storage reservation = _reservation[from_][nonce_];
         _execute(from_, reservation);
         return true;
