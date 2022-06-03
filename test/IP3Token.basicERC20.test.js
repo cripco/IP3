@@ -204,7 +204,7 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user1,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
             expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(originalUser1Balance));
         });
@@ -249,7 +249,7 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user2,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
             expect(await IP3Token.balanceOf(user1.address)).to.equal(ethers.BigNumber.from(originalUser1Balance));
             expect(await IP3Token.balanceOf(user3.address)).to.equal(ethers.BigNumber.from(originalUser3Balance));
@@ -302,7 +302,7 @@ describe('IP3Token - Basic ERC20 functions', function () {
                 user1,
                 ethers,
                 provider,
-                'ERC20: burn amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
 
             expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance));
