@@ -21,7 +21,7 @@ describe('IP3Token - Events emission', function () {
 
     beforeEach(async () => {
         [IP3Token] = await TestHelper.setupContractTesting(owner);
-    });  
+    });
 
     describe('IP3Token - Events in link with ERC20 token', async function () {
         const amountToApprove = 100;

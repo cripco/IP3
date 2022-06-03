@@ -115,7 +115,7 @@ contract Ethless is ERC20Reservable {
 
     function balanceOf(address account) public view virtual override returns (uint256 amount) {
         return super.balanceOf(account);
-    }   
+    }
 
     uint256[50] private __gap;
 }
