@@ -64,6 +64,91 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
             );
         });
+        it('Test Ethless Reserve + ReserveOf', async () => {
+            const originalBalance = await IP3Token.balanceOf(owner.address);
+
+            const nonce = Date.now();
+            const blockNumber = await provider.getBlockNumber();
+            const expirationBlock = blockNumber + 2000;
+
+            const signature = SignHelper.signReserve(
+                4,
+                network.config.chainId,
+                IP3Token.address,
+                owner.address,
+                owner.privateKey,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256,bytes)'
+            ](
+                owner.address,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock,
+                signature
+            );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
+
+            const reserveOf = await IP3Token.reserveOf(owner.address);
+            expect(reserveOf).to.equal(ethers.BigNumber.from(amountToReserve).add(feeToPay));
+        });
+        it('Test Ethless Reserve + GetReservation', async () => {
+            const originalBalance = await IP3Token.balanceOf(owner.address);
+
+            const nonce = Date.now();
+            const blockNumber = await provider.getBlockNumber();
+            const expirationBlock = blockNumber + 2000;
+
+            const signature = SignHelper.signReserve(
+                4,
+                network.config.chainId,
+                IP3Token.address,
+                owner.address,
+                owner.privateKey,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock
+            );
+            const input = await IP3Token.connect(user3).populateTransaction[
+                'reserve(address,address,address,uint256,uint256,uint256,uint256,bytes)'
+            ](
+                owner.address,
+                user1.address,
+                owner.address,
+                amountToReserve,
+                feeToPay,
+                nonce,
+                expirationBlock,
+                signature
+            );
+            await TestHelper.checkResult(input, IP3Token.address, user3, ethers, provider, 0);
+            expect(await IP3Token.balanceOf(owner.address)).to.equal(
+                ethers.BigNumber.from(originalBalance).sub(amountToReserve).sub(feeToPay)
+            );
+
+            const getReservation = await IP3Token.getReservation(owner.address, nonce);
+            expect(getReservation['amount'], 'amount').to.equal(ethers.BigNumber.from(amountToReserve));
+            expect(getReservation['fee'], 'fee').to.equal(ethers.BigNumber.from(feeToPay));
+            expect(getReservation['recipient'], 'recipient').to.equal(user1.address);
+            expect(getReservation['executor'], 'executor').to.equal(owner.address);
+            expect(getReservation['expiryBlockNum'], 'expiryBlockNum').to.equal(ethers.BigNumber.from(expirationBlock));
+            expect(getReservation['status'], 'status').to.equal(1);
+        });
         it('Test Ethless Reserve & Execute', async () => {
             const originalBalance = await IP3Token.balanceOf(owner.address);
 

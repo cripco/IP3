@@ -5,10 +5,10 @@ pragma solidity ^0.8.13;
  * @title Ethless
  */
 
-import './Reservable.sol';
+import './ERC20Reservable.sol';
 import '@openzeppelin/contracts-upgradeable/utils/cryptography/ECDSAUpgradeable.sol';
 
-contract Ethless is Reservable {
+contract Ethless is ERC20Reservable {
     using ECDSAUpgradeable for bytes32;
 
     enum EthlessTxnType {

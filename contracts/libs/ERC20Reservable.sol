@@ -7,7 +7,7 @@ pragma solidity ^0.8.13;
 
 import '@openzeppelin/contracts-upgradeable/token/ERC20/ERC20Upgradeable.sol';
 
-contract Reservable is ERC20Upgradeable {
+contract ERC20Reservable is ERC20Upgradeable {
     enum ReservationStatus {
         Draft, // 0
         Active, // 1
@@ -54,19 +54,6 @@ contract Reservable is ERC20Upgradeable {
         _totalReserved[from_] += amount_ + executionFee_;
     }
 
-    function reserve(
-        address from_,
-        address to_,
-        address executor_,
-        uint256 amount_,
-        uint256 executionFee_,
-        uint256 nonce_,
-        uint256 deadline_
-    ) external returns (bool success) {
-        _reserve(from_, to_, executor_, amount_, executionFee_, nonce_, deadline_);
-        return true;
-    }
-
     function reserveOf(address account_) external view returns (uint256 count) {
         return _totalReserved[account_];
     }
@@ -102,7 +89,7 @@ contract Reservable is ERC20Upgradeable {
         return true;
     }
 
-    function execute(address from_, uint256 nonce_) public returns (bool success) {
+    function execute(address from_, uint256 nonce_) external returns (bool success) {
         Reservation storage reservation = _reservation[from_][nonce_];
         _execute(from_, reservation);
         return true;
