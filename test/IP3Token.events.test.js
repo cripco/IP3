@@ -13,7 +13,6 @@ let user3;
 let IP3Token;
 let provider;
 const zeroAddress = '0x0000000000000000000000000000000000000000';
-const AdminRole = '0x0000000000000000000000000000000000000000000000000000000000000000';
 
 describe('IP3Token - Events emission', function () {
     before(async () => {
@@ -22,36 +21,6 @@ describe('IP3Token - Events emission', function () {
 
     beforeEach(async () => {
         [IP3Token] = await TestHelper.setupContractTesting(owner);
-    });
-
-    describe('IP3Token - Events in link with roles', async function () {
-        it('Test grantRole() emit RoleGranted', async () => {
-            const input = await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
-            const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, 'RoleGranted').withArgs(AdminRole, user1.address, owner.address);
-            expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal('RoleGranted');
-        });
-
-        it('Test revokeRole() emit RoleRevoked', async () => {
-            await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
-
-            const input = await IP3Token.connect(owner).revokeRole(AdminRole, user1.address);
-            const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, 'RoleRevoked').withArgs(AdminRole, user1.address, owner.address);
-            expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal('RoleRevoked');
-        });
-
-        it('Test renounceRole() emit RoleRevoked', async () => {
-            await IP3Token.connect(owner).grantRole(AdminRole, user1.address);
-
-            const input = await IP3Token.connect(user1).renounceRole(AdminRole, user1.address);
-            const receipt = await input.wait();
-            await expect(input).to.emit(IP3Token, 'RoleRevoked').withArgs(AdminRole, user1.address, user1.address);
-            expect(receipt.events.length).to.equal(1);
-            await expect(receipt.events[0].event).to.be.equal('RoleRevoked');
-        });
     });
 
     describe('IP3Token - Events in link with ERC20 token', async function () {

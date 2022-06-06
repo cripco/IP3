@@ -41,8 +41,8 @@ contract ERC20Reservable is ERC20Upgradeable {
         uint256 nonce_,
         uint256 deadline_
     ) internal {
-        require(deadline_ > block.number, 'Reservable: deadline must be in the future');
-        require(balanceOf(from_) >= amount_ + executionFee_, 'Reservable: reserve amount exceeds balance');
+        require(deadline_ > block.number, 'ERC20Reservable: deadline must be in the future');
+        require(balanceOf(from_) >= amount_ + executionFee_, 'ERC20Reservable: reserve amount exceeds balance');
         _reservation[from_][nonce_] = Reservation(
             amount_,
             executionFee_,
@@ -62,17 +62,20 @@ contract ERC20Reservable is ERC20Upgradeable {
         return _reservation[account_][nonce_];
     }
 
-    function _execute(address from_, Reservation storage reservation) internal returns (bool success) {
-        require(reservation.expiryBlockNum != 0, 'Reservable: reservation does not exist');
+    function _execute(address from_, Reservation storage reservation) internal {
+        require(reservation.expiryBlockNum != 0, 'ERC20Reservable: reservation does not exist');
         require(
             reservation.executor == _msgSender() || from_ == _msgSender(),
-            'Reservable: this address is not authorized to execute this reservation'
+            'ERC20Reservable: this address is not authorized to execute this reservation'
         );
         require(
             reservation.expiryBlockNum > block.number,
-            'Reservable: reservation has expired and cannot be executed'
+            'ERC20Reservable: reservation has expired and cannot be executed'
         );
-        require(reservation.status == ReservationStatus.Active, 'Reservable: invalid reservation status to execute');
+        require(
+            reservation.status == ReservationStatus.Active,
+            'ERC20Reservable: invalid reservation status to execute'
+        );
 
         uint256 fee = reservation.fee;
         uint256 amount = reservation.amount;
@@ -86,7 +89,6 @@ contract ERC20Reservable is ERC20Upgradeable {
 
         _transfer(from_, executor, fee);
         _transfer(from_, recipient, amount);
-        return true;
     }
 
     function execute(address from_, uint256 nonce_) external returns (bool success) {
@@ -99,16 +101,19 @@ contract ERC20Reservable is ERC20Upgradeable {
         Reservation storage reservation = _reservation[from_][nonce_];
         address executor = reservation.executor;
 
-        require(reservation.expiryBlockNum != 0, 'Reservable: reservation does not exist');
-        require(reservation.status == ReservationStatus.Active, 'Reservable: invalid reservation status to reclaim');
+        require(reservation.expiryBlockNum != 0, 'ERC20Reservable: reservation does not exist');
+        require(
+            reservation.status == ReservationStatus.Active,
+            'ERC20Reservable: invalid reservation status to reclaim'
+        );
         if (_msgSender() != executor) {
             require(
                 _msgSender() == from_,
-                'Reservable: only the sender or the executor can reclaim the reservation back to the sender'
+                'ERC20Reservable: only the sender or the executor can reclaim the reservation back to the sender'
             );
             require(
                 reservation.expiryBlockNum <= block.number,
-                'Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
+                'ERC20Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
             );
         }
 

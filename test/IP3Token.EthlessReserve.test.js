@@ -4,6 +4,7 @@ const { solidity } = require('ethereum-waffle');
 const { ethers, network } = require('hardhat');
 const TestHelper = require('./shared');
 const SignHelper = require('./signature');
+
 use(solidity);
 
 let owner;
@@ -335,7 +336,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 user3,
                 ethers,
                 provider,
-                'Reservable: reserve amount exceeds balance'
+                'ERC20Reservable: reserve amount exceeds balance'
             );
         });
 
@@ -381,7 +382,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 user3,
                 ethers,
                 provider,
-                'Reservable: reserve amount exceeds balance'
+                'ERC20Reservable: reserve amount exceeds balance'
             );
         });
 
@@ -427,7 +428,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 user3,
                 ethers,
                 provider,
-                'Reservable: reserve amount exceeds balance'
+                'ERC20Reservable: reserve amount exceeds balance'
             );
         });
 
@@ -467,7 +468,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 user3,
                 ethers,
                 provider,
-                'Reservable: deadline must be in the future'
+                'ERC20Reservable: deadline must be in the future'
             );
         });
 
@@ -497,7 +498,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 user3,
                 ethers,
                 provider,
-                'Reservable: deadline must be in the future'
+                'ERC20Reservable: deadline must be in the future'
             );
         });
 
@@ -548,7 +549,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 owner,
                 ethers,
                 provider,
-                'Reservable: reservation has expired and cannot be executed'
+                'ERC20Reservable: reservation has expired and cannot be executed'
             );
         });
         it('Test Ethless Reserve & Reclaim while reservation is not expired yet', async () => {
@@ -598,7 +599,7 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 owner,
                 ethers,
                 provider,
-                'Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
+                'ERC20Reservable: reservation has not expired or you are not the executor and cannot be reclaimed'
             );
         });
     });

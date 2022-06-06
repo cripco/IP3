@@ -116,7 +116,7 @@ describe('IP3Token - Ethless Burn functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: burn amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
 
@@ -147,7 +147,7 @@ describe('IP3Token - Ethless Burn functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: burn amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
 
@@ -178,7 +178,7 @@ describe('IP3Token - Ethless Burn functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
     });

@@ -167,7 +167,7 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
 
@@ -199,7 +199,7 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
 
@@ -231,7 +231,7 @@ describe('IP3Token - Ethless Transfer functions', function () {
                 user3,
                 ethers,
                 provider,
-                'ERC20: transfer amount exceeds balance'
+                'IP3Token: Insufficient balance'
             );
         });
     });

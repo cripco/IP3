@@ -454,7 +454,7 @@ describe('IP3Token - Boundary', function () {
                 const inputBurn = await IP3Token.connect(owner).populateTransaction['burn(uint256)'](amount);
                 msg = await TestHelper.checkResult(inputBurn, IP3Token.address, owner, ethers, provider, 0);
             } catch (err) {
-                msg = 'ERC20: burn amount exceeds balance';
+                msg = 'IP3Token: Insufficient balance';
             }
 
             expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance));
@@ -481,11 +481,11 @@ describe('IP3Token - Boundary', function () {
                 ](owner.address, amount, feeToPay, nonce, signature, { from: owner.address });
                 msg = await TestHelper.checkResult(input, IP3Token.address, owner, ethers, provider, 0);
             } catch (err) {
-                msg = 'ERC20: burn amount exceeds balance';
+                msg = 'IP3Token: Insufficient balance';
             }
 
             expect(await IP3Token.balanceOf(owner.address)).to.equal(ethers.BigNumber.from(originalBalance));
-            expect(msg).to.equal('ERC20: burn amount exceeds balance');
+            expect(msg).to.equal('IP3Token: Insufficient balance');
         });
         it('Test transfer() w/ zero(0) number', async () => {
             const amount = 0;
