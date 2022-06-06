@@ -105,7 +105,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
         vm.prank(USER1);
         iP3Token.transfer(USER3, amountToTransfer);
-        
+
         assertEq(iP3Token.balanceOf(USER1), 0);
         assertEq(iP3Token.balanceOf(USER3), amountToTransfer);
     }
@@ -136,7 +136,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
 
         vm.prank(USER1);
         iP3Token.transfer(USER3, amountToTransfer - 1);
-        
+
         assertEq(iP3Token.balanceOf(USER1), 1);
         assertEq(iP3Token.balanceOf(USER3), amountToTransfer - 1);
     }
@@ -168,7 +168,7 @@ contract IP3TokenTest is DSTest, SharedHelper {
         vm.prank(USER1);
         vm.expectRevert('IP3Token: Insufficient balance');
         iP3Token.transfer(USER3, amountToTransfer + 1);
-        
+
         assertEq(iP3Token.balanceOf(USER1), amountToTransfer);
         assertEq(iP3Token.balanceOf(USER3), 0);
     }
