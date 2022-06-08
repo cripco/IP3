@@ -111,6 +111,21 @@ const checkResult = async (input, to, from, ethers, provider, errMsg) => {
     }
 };
 
+const waitForNumberOfBlock = async (provider, numberOfBlock) => {
+    const currentBlock = await provider.getBlockNumber();
+    let temp = await provider.getBlockNumber();
+    while (temp < currentBlock + numberOfBlock) {
+        if (network.name === 'hardhat') {
+            // Mine 1 block
+            await provider.send('evm_mine');
+        } else {
+            // wait 15 seconds
+            await new Promise((resolve) => setTimeout(resolve, 15000));
+        }
+        temp = await provider.getBlockNumber();
+    }
+};
+
 module.exports = {
     // CONSTANTS
     NAME,
@@ -124,5 +139,6 @@ module.exports = {
     setupProviderAndWallet,
     setupContractTesting,
     txn,
-    checkResult
+    checkResult,
+    waitForNumberOfBlock
 };
