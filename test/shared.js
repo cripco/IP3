@@ -119,8 +119,8 @@ const waitForNumberOfBlock = async (provider, numberOfBlock) => {
             // Mine 1 block
             await provider.send('evm_mine');
         } else {
-            // wait 14 seconds
-            await new Promise((resolve) => setTimeout(resolve, 10000));
+            // wait 15 seconds
+            await new Promise((resolve) => setTimeout(resolve, 15000));
         }
         temp = await provider.getBlockNumber();
     }

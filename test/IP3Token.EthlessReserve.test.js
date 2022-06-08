@@ -558,7 +558,14 @@ describe('IP3Token - Ethless Reserve functions', function () {
                 owner.address,
                 nonce
             );
-            await TestHelper.checkResult(inputReclaim, IP3Token.address, owner, ethers, provider, 'ERC20: transfer to the zero address');
+            await TestHelper.checkResult(
+                inputReclaim,
+                IP3Token.address,
+                owner,
+                ethers,
+                provider,
+                'ERC20: transfer to the zero address'
+            );
         });
 
         it('Test Ethless Reserve with executor as address zero and reclaim when reservation expired', async () => {
