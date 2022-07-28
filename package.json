@@ -31,7 +31,7 @@
     "solidity-coverage": "^0.7.21"
   },
   "dependencies": {
-    "@openzeppelin/contracts-upgradeable": "^4.6.0",
+    "@openzeppelin/contracts-upgradeable": "^4.7.1",
     "dotenv": "^16.0.1",
     "hardhat-awesome-cli": "^0.0.15"
   },
