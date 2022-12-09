@@ -1,6 +1,7 @@
 const { ethers, network, upgrades, addressBook } = require('hardhat');
 const ScriptHelper = require('./helper');
 const TestHelper = require('../test/shared');
+const owner = "0x7B17116c5C56264a70B956FEC54E3a3736e08Af0";
 
 async function main() {
     const [deployer] = await ethers.getSigners();
@@ -12,9 +13,9 @@ async function main() {
     // Contract deployed with transparent proxy
     const UpgradeableIP3Token = await ethers.getContractFactory('IP3Token');
     const upgradeableIP3Token = await upgrades.deployProxy(UpgradeableIP3Token, [
-        deployer.address, 
-        TestHelper.NAME, 
-        TestHelper.SYMBOL, 
+        owner,
+        TestHelper.NAME,
+        TestHelper.SYMBOL,
         TestHelper.TOTALSUPPLY
     ]);
     await upgradeableIP3Token.deployed();

@@ -16,7 +16,7 @@ contract IP3Token is ERC20PermitUpgradeable, Ethless {
         uint256 totalSupply_
     ) external initializer {
         __ERC20_init_unchained(name_, symbol_);
-        __EIP712_init_unchained(name_, '1');
+        __EIP712_init_unchained(name_, version());
         __ERC20Permit_init_unchained(name_);
         __Reservable_init_unchained();
         __Ethless_init_unchained();
@@ -32,7 +32,7 @@ contract IP3Token is ERC20PermitUpgradeable, Ethless {
     }
 
     function version() public pure returns (string memory) {
-        return '0.1';
+        return '1.0';
     }
 
     function burn(uint256 amount_) external {
