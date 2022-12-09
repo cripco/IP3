@@ -7,7 +7,7 @@ use(solidity);
 const NAME = 'IP3';
 const SYMBOL = 'IP3';
 const DECIMALS = 18;
-const TOTALSUPPLY = ethers.utils.parseUnits('300000000000', DECIMALS);
+const TOTALSUPPLY = ethers.utils.parseUnits('300000000', DECIMALS);
 const VERSION = '0.1';
 const VERSION_712 = '1';
 
