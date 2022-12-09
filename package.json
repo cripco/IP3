@@ -23,7 +23,7 @@
     "chance": "^1.1.8",
     "ethereum-waffle": "^3.0.0",
     "ethers": "5.0.0",
-    "hardhat": "^2.9.3",
+    "hardhat": "^2.12.4",
     "hardhat-gas-reporter": "^1.0.8",
     "pre-commit": "^1.2.2",
     "prettier": "^2.6.2",
