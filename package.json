@@ -17,18 +17,18 @@
   },
   "devDependencies": {
     "@nomiclabs/hardhat-ethers": "^2.0.5",
-    "@nomiclabs/hardhat-waffle": "^2.0.3",
+    "@nomiclabs/hardhat-waffle": "^2.0.5",
     "@openzeppelin/hardhat-upgrades": "^1.17.0",
     "chai": "^4.2.0",
     "chance": "^1.1.8",
-    "ethereum-waffle": "^3.0.0",
+    "ethereum-waffle": "^4.0.9",
     "ethers": "5.0.0",
     "hardhat": "^2.10.2",
     "hardhat-gas-reporter": "^1.0.8",
     "pre-commit": "^1.2.2",
     "prettier": "^2.6.2",
     "prettier-plugin-solidity": "^1.0.0-beta.19",
-    "solidity-coverage": "^0.7.21"
+    "solidity-coverage": "^0.8.2"
   },
   "dependencies": {
     "@openzeppelin/contracts-upgradeable": "^4.7.1",
